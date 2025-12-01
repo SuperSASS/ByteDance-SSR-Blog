@@ -1,8 +1,20 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "outDir": "./dist",
-        "rootDir": "./src"
-    },
-    "include": [ "src" ]
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    /* shared 作为“库包”被引用 */
+    "lib": ["ES2020"],
+
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    /* 要真实输出 JS + d.ts */
+    "noEmit": false,
+    "rootDir": "src",
+    "outDir": "dist",
+
+    /* 方便在包内部使用简短路径（可选） */
+    "baseUrl": "src"
+  },
+  "include": ["src"]
 }

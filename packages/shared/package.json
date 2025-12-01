@@ -1,5 +1,5 @@
 {
-  "name": "shared",
+  "name": "ssr-blog-shared",
   "version": "0.0.0",
   "private": true,
   "main": "./dist/index.js",

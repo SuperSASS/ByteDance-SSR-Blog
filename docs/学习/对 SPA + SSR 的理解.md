@@ -30,13 +30,12 @@ SPA，单页面应用，核心就是：
 /posts/1 → Web 服务器返回 index.html，其中加载 PostDetailPage 页面
 ```
 
-
 ### 核心机制：History API
 
 浏览器提供的 History API：
 
 ```js
-history.pushState(state, title, url)
+history.pushState(state, title, url);
 ```
 
 能够让地址栏 URL 进行修改，但不会刷新、主动触发网络请求（但页面里获取数据时可能自行触发请求）。
@@ -59,7 +58,7 @@ SPA 只通过 React Router 支持站内点击`<Link>`/`<NavLink>`链接的无刷
 需要额外配置一个`index`兜底，如 nginx 的 location，`location / { try_files $url /index.html }`，则找不到的请求都返回`/index.html`。  
 此时无论访问什么 URL，都会进入`index.html`，然后加载 JS、Router，根据 URL 匹配再渲染对应 pages。
 
-*注：如果是`npm run dev`，Vite 会自动自行这个兜底。*
+_注：如果是`npm run dev`，Vite 会自动自行这个兜底。_
 
 ## SPA + SSR
 
@@ -106,7 +105,7 @@ export default router;
 >     /</g,
 >     '\\u003c'
 >   );
-> 
+>
 >   // 注：下面的 <script src="/assets/entry-client.js"></script> 这句话还不对，还涉及到正确与 entry-client.js 建立连接，这个后面讲。
 >   // 这里先这么写，好理解这个模板会加载 entry-client.js，然后其中进行水合，就包括了 React Router 的逻辑，以成为 SPA。
 >   // 类比于 CSR 的 index.html 中的 <script type="module" src="/src/main.tsx"></script>
@@ -131,7 +130,7 @@ export default router;
 
 可见其中`import from entry-server`的`render`是 SSR 生成页面的核心渲染函数，其中调用`ReactDOMServer.renderToString`生成 HTML 并返回（此时不考虑 SPA），  
 那对于 SPA，需要根据 URL 渲染不同 Page，这个功能还是且应当要 React Router 来做，这个函数一般是怎么写的呢？  
-如下：  
+如下：
 
 ```ts
 // apps/web/src/entry-server.tsx
@@ -159,11 +158,11 @@ export function render(url: string, initialData: any) {
 
 > 拓展 - 四种路由模式：
 >
-> * `createBrowserRouter`：基于 History API 的路由，常用于 CSR
-> * `createHashRouter`：基于 Hash 的路由，常用于不支持 History API 的旧版浏览器
-> * `createMemoryRouter`：内存路由，不与 History API 交互，常用于 SSR  
+> - `createBrowserRouter`：基于 History API 的路由，常用于 CSR
+> - `createHashRouter`：基于 Hash 的路由，常用于不支持 History API 的旧版浏览器
+> - `createMemoryRouter`：内存路由，不与 History API 交互，常用于 SSR  
 >   其中`initialEntries`用于指定渲染 routes 中哪个 URL（由`initialIndex`指定是数组中的哪一个），这个数组用来模拟 History API。
-> * `createStaticRouter`：静态路由，常用于服务端渲染，一般搭配`loader`这个路由中的方法（数据预取）
+> - `createStaticRouter`：静态路由，常用于服务端渲染，一般搭配`loader`这个路由中的方法（数据预取）
 
 这样就能生成水合前的页面 HTML。但没有水合，只是生成了对应 URL 的 HTML 页面，此时还没有相应 SPA 功能的实现。
 
@@ -241,16 +240,16 @@ hydrateRoot(
 > import React from 'react';
 > import type { Router } from 'react-router-dom';
 > import { RouterProvider } from 'react-router-dom';
-> 
+>
 > interface AppShellProps {
 >   router: Router;
 >   initialData?: any;
 > }
-> 
+>
 > // 可选：用 Context 把 initialData 向下传
 > // 后续用 const initialData = React.useContext(InitialDataContext) as { articles?: any[] } | null; 获取
 > export const InitialDataContext = React.createContext<any | null>(null);
-> 
+>
 > export function AppShell({ router, initialData }: AppShellProps) {
 >   return (
 >     <React.StrictMode>

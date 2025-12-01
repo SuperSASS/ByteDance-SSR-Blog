@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    /* 纯 Node 环境，不需要 DOM */
+    "lib": ["ES2020"],
+
+    /* 后端要产出 dist 交给 Node/pm2 等运行 */
+    "noEmit": false,
+    "rootDir": "src",
+    "outDir": "dist",
+
+    /* 路径别名 */
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "../../packages/shared" }]
+}
