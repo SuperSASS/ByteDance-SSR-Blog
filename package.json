@@ -11,7 +11,8 @@
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "kill": "node scripts/kill-port.js 3000"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
