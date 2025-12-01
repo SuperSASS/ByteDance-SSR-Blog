@@ -4,6 +4,7 @@ import bodyParser from 'koa-bodyparser';
 // import serve from 'koa-static';
 // import path from 'path';
 import ssrRouter from './routes/ssr.js';
+import apiRouter from './routes/api.js';
 
 const app = new Koa();
 const PORT = process.env.PORT || 3000;
@@ -14,16 +15,16 @@ app.use(bodyParser());
 // 静态资源（后续会用到）
 // app.use(serve(path.join(__dirname, '../web/dist')));
 
-// API 路由
+// API routes (must come before SSR catch-all)
+app.use(apiRouter.routes());
+app.use(apiRouter.allowedMethods());
 
-// SSR 路由
+// SSR routes (catch-all, must be last)
 app.use(ssrRouter.routes());
 app.use(ssrRouter.allowedMethods());
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
-  console.log(`📝 Stage 1: Minimal SSR SPA Skeleton`);
-  console.log(`⏭️  Next: Stage 2 - Database & Prisma`);
 });
 
 export default app;
