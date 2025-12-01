@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
+import koaLogger from 'koa-logger';
+import logger from './utils/logger.js';
 // import serve from 'koa-static';
 // import path from 'path';
 import ssrRouter from './routes/ssr.js';
@@ -10,6 +12,11 @@ const app = new Koa();
 const PORT = process.env.PORT || 3000;
 
 // 中间件
+app.use(
+  koaLogger((str) => {
+    logger.info(str.trim());
+  })
+);
 app.use(bodyParser());
 
 // 静态资源（后续会用到）
