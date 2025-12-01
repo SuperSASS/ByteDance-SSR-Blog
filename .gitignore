@@ -2,6 +2,11 @@
 
 hugo-theme-stack
 
+# DB
+migrations
+generated
+*.db
+
 # Logs
 logs
 *.log

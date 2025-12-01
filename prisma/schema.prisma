@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  // 生成 client 路径
+  output   = "../apps/server/src/db/generated/client"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+
+  posts       Post[]
+  permissions UserCategoryPermission[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  slug String @unique
+  name String
+
+  posts       Post[]
+  permissions UserCategoryPermission[]
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  slug String @unique
+  name String
+
+  posts PostTag[]
+}
+
+model Post {
+  id            Int       @id @default(autoincrement())
+  title         String
+  slug          String    @unique
+  content       String
+  summary       String?
+  coverImageUrl String?
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  authorId Int
+  author   User @relation(fields: [authorId], references: [id])
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  tags PostTag[]
+}
+
+model PostTag {
+  postId Int
+  post   Post @relation(fields: [postId], references: [id])
+
+  tagId Int
+  tag   Tag @relation(fields: [tagId], references: [id])
+
+  @@id([postId, tagId])
+}
+
+model UserCategoryPermission {
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([userId, categoryId])
+}

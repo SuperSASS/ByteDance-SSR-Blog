@@ -7,7 +7,9 @@
     "dev": "nodemon --watch src --ext ts,tsx,json --exec tsx src/app.ts",
     "build": "tsc",
     "lint": "eslint .",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "db:reset": "tsx src/scripts/seed-db.ts",
+    "db:studio": "prisma studio --url file:../../dev.db"
   },
   "dependencies": {
     "@koa/router": "^14.0.0",
@@ -15,13 +17,13 @@
     "koa": "^3.1.1",
     "koa-bodyparser": "^4.4.1",
     "koa-static": "^5.0.0",
+    "prisma-adapter-node-sqlite": "^0.0.1",
     "ssr-blog-shared": "workspace:*"
   },
   "devDependencies": {
     "@types/koa": "^3.0.1",
     "@types/koa-bodyparser": "^4.3.13",
     "@types/koa-static": "^4.0.4",
-    "@types/koa__router": "^12.0.5",
-    "nodemon": "^3.1.11"
+    "@types/koa__router": "^12.0.5"
   }
 }
