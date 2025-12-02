@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom';
 
-export function ArchiveList() {
-  // TODO: 这里是 mock 数据，要替换
-  const archives = [
-    { year: 2024, count: 5 },
-    { year: 2023, count: 12 },
-  ];
+interface ArchiveListProps {
+  archives: { year: number; count: number }[];
+}
 
+export function ArchiveList({ archives }: ArchiveListProps) {
   return (
     <div className="space-y-3">
       <h3 className="text-lg font-semibold">归档</h3>

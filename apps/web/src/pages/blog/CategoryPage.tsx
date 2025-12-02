@@ -1,20 +1,13 @@
-import { useParams } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import { PostCard } from '@/components/blog/PostCard';
-import { mockPosts } from '@/mock/posts';
 import { Folder } from 'lucide-react';
+import type { CategoryDto, PostSummaryDto } from 'ssr-blog-shared';
 
 export function CategoryPage() {
-  const { id } = useParams();
-  const categoryId = Number(id);
-
-  const category = mockPosts.find(
-    (p) => p.category.id === categoryId
-  )?.category;
-  const posts = mockPosts.filter((post) => post.category.id === categoryId);
-
-  if (!category) {
-    return <div className="text-center py-10">分类不存在</div>;
-  }
+  const { category, posts } = useLoaderData() as {
+    category: CategoryDto;
+    posts: PostSummaryDto[];
+  };
 
   return (
     <div className="space-y-8">

@@ -1,35 +1,32 @@
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useLoaderData, Link } from 'react-router-dom';
 import { CategoryList } from '@/components/blog/CategoryList';
-import { mockPosts } from '@/mock/posts';
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar, ArrowRight } from 'lucide-react';
+import type { CategoryDto, PostSummaryDto } from 'ssr-blog-shared';
 
 export function ArchivePage() {
-  // Extract categories from mock posts (deduplicated)
-  const categories = useMemo(() => {
-    const uniqueCategories = new Map();
-    mockPosts.forEach((post) => {
-      if (!uniqueCategories.has(post.category.id)) {
-        uniqueCategories.set(post.category.id, post.category);
-      }
-    });
-    return Array.from(uniqueCategories.values());
-  }, []);
+  const { categories, archives, allPosts } = useLoaderData() as {
+    categories: CategoryDto[];
+    archives: { year: number; count: number }[];
+    allPosts: PostSummaryDto[];
+  };
 
   // Group posts by year
   const postsByYear = useMemo(() => {
-    const groups: Record<number, typeof mockPosts> = {};
-    mockPosts.forEach((post) => {
-      const year = new Date(post.publishedAt).getFullYear();
-      if (!groups[year]) {
-        groups[year] = [];
+    const groups: Record<number, PostSummaryDto[]> = {};
+    allPosts.forEach((post) => {
+      if (post.publishedAt) {
+        const year = new Date(post.publishedAt).getFullYear();
+        if (!groups[year]) {
+          groups[year] = [];
+        }
+        groups[year].push(post);
       }
-      groups[year].push(post);
     });
     // Sort years descending
     return Object.entries(groups).sort((a, b) => Number(b[0]) - Number(a[0]));
-  }, []);
+  }, [allPosts]);
 
   return (
     <div className="space-y-8">
@@ -79,10 +76,11 @@ export function ArchivePage() {
                           </h4>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                             <Calendar className="w-3 h-3" />
-                            {new Date(post.publishedAt).toLocaleDateString(
-                              'zh-CN',
-                              { month: 'short', day: 'numeric' }
-                            )}
+                            {post.publishedAt &&
+                              new Date(post.publishedAt).toLocaleDateString(
+                                'zh-CN',
+                                { month: 'short', day: 'numeric' }
+                              )}
                           </div>
                         </div>
                         <ArrowRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all" />

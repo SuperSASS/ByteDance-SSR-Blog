@@ -20,10 +20,8 @@ export function SiteSidebar() {
             B
           </div>
         </Link>
-        <h1 className="text-xl font-bold mb-1">我的博客</h1>
-        <p className="text-sm text-muted-foreground text-center">
-          万华收尽，化作春泥
-        </p>
+        <h1 className="text-xl font-bold mb-1">Super SASS……</h1>
+        <p className="text-sm text-muted-foreground text-center">万华散尽……</p>
       </div>
 
       {/* Navigation */}

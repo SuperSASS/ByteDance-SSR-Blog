@@ -73,4 +73,27 @@ export const postApiController = {
 
     ctx.body = posts;
   },
+
+  async getPostsByCategory(ctx: Context) {
+    const categoryId = Number(ctx.params.categoryId);
+    const posts = await postService.getPostsByCategory(categoryId);
+    ctx.body = posts;
+  },
+
+  async getPostsByTag(ctx: Context) {
+    const tagId = Number(ctx.params.tagId);
+    const posts = await postService.getPostsByTag(tagId);
+    ctx.body = posts;
+  },
+
+  async getPostsByYear(ctx: Context) {
+    const year = Number(ctx.params.year);
+    const posts = await postService.getPostsByYear(year);
+    ctx.body = posts;
+  },
+
+  async getArchiveStatistics(ctx: Context) {
+    const stats = await postService.getArchiveStatistics();
+    ctx.body = stats;
+  },
 };

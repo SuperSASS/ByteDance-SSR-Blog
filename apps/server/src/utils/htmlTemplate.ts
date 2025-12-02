@@ -5,6 +5,7 @@ export function htmlTemplate(appHtml: string, initialData: any) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>SSR Blog</title>
   </head>
   <body>

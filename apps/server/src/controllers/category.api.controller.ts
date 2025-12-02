@@ -56,9 +56,7 @@ export const categoryApiController = {
 
   async getCategories(ctx: Context) {
     try {
-      console.log('Fetching categories...');
       const categories = await categoryService.getCategories();
-      console.log('Categories fetched:', categories.length);
       ctx.body = categories;
     } catch (error: any) {
       console.error('Error in listCategories:', error);

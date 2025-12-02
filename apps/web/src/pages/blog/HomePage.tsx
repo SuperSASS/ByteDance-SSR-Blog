@@ -1,19 +1,27 @@
+import { useLoaderData } from 'react-router-dom';
 import { PostCard } from '@/components/blog/PostCard';
-import { mockPosts } from '@/mock/posts';
+import { SiteRightAside } from '@/components/common/SiteRightAside';
+import type { PostSummaryDto, CategoryDto, TagDto } from 'ssr-blog-shared';
 
 export function HomePage() {
+  const { posts, categories, tags, archives } = useLoaderData() as {
+    posts: PostSummaryDto[];
+    categories: CategoryDto[];
+    tags: TagDto[];
+    archives: { year: number; count: number }[];
+  };
+
   return (
-    <div className="space-y-8">
-      <div className="space-y-2">
-        <h1 className="text-4xl font-bold">最新文章</h1>
-        <p className="text-muted-foreground">分享技术、生活和思考</p>
+    <div className="flex gap-8">
+      <div className="flex-1 space-y-8">
+        <div className="grid gap-6">
+          {posts.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
       </div>
 
-      <div className="grid gap-6">
-        {mockPosts.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
-      </div>
+      <SiteRightAside tags={tags} archives={archives} />
     </div>
   );
 }

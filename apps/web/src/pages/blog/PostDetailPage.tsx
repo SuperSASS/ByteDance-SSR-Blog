@@ -1,22 +1,12 @@
-import { useParams, Link } from 'react-router-dom';
+import { useLoaderData, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Calendar, Clock, Eye, Folder } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { mockPosts } from '@/mock/posts';
+import type { PostDetailDto } from 'ssr-blog-shared';
 
 export function PostDetailPage() {
-  const { id } = useParams();
-  const post = mockPosts.find((p) => p.id === Number(id));
-
-  if (!post) {
-    return (
-      <div className="text-center py-20">
-        <h1 className="text-4xl font-bold mb-4">文章未找到</h1>
-        <p className="text-muted-foreground">抱歉，您访问的文章不存在。</p>
-      </div>
-    );
-  }
+  const { post } = useLoaderData() as { post: PostDetailDto };
 
   return (
     <Card className="max-w-4xl mx-auto overflow-hidden">
@@ -67,19 +57,22 @@ export function PostDetailPage() {
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
-                {new Date(post.publishedAt).toLocaleDateString('zh-CN', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                {post.publishedAt &&
+                  new Date(post.publishedAt).toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
-                {post.readTime} 分钟阅读
+                {/* TODO: 阅读时间根据正文内容计算 */}
+                阅读时间约 5 分钟
               </span>
               <span className="flex items-center gap-1">
                 <Eye className="h-4 w-4" />
-                {post.views} 次阅读
+                {/* TODO: 后台实现浏览次数的记录 */}
+                浏览次数
               </span>
             </div>
           </header>

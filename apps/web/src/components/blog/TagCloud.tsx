@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom';
-import { mockTags } from '@/mock/tags';
+import type { TagDto } from 'ssr-blog-shared';
 
-export function TagCloud() {
+interface TagCloudProps {
+  tags: TagDto[];
+}
+
+export function TagCloud({ tags }: TagCloudProps) {
   return (
     <div className="space-y-3">
       <h3 className="text-lg font-semibold">标签云</h3>
       <div className="flex flex-wrap gap-2">
-        {mockTags.map((tag) => (
+        {tags.map((tag) => (
           <Link
             key={tag.id}
             to={`/tags/${tag.id}`}

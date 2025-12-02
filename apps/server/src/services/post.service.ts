@@ -195,4 +195,96 @@ export const postService = {
     });
     return posts.map(toPostSummaryDto);
   },
+
+  async getPostsByCategory(categoryId: number): Promise<PostSummaryDto[]> {
+    const posts = await prisma.post.findMany({
+      where: {
+        categoryId,
+        publishedAt: { not: null },
+      },
+      orderBy: { publishedAt: 'desc' },
+      include: {
+        author: true,
+        category: true,
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    });
+    return posts.map(toPostSummaryDto);
+  },
+
+  async getPostsByTag(tagId: number): Promise<PostSummaryDto[]> {
+    const posts = await prisma.post.findMany({
+      where: {
+        tags: {
+          some: {
+            tagId,
+          },
+        },
+        publishedAt: { not: null },
+      },
+      orderBy: { publishedAt: 'desc' },
+      include: {
+        author: true,
+        category: true,
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    });
+    return posts.map(toPostSummaryDto);
+  },
+
+  async getPostsByYear(year: number): Promise<PostSummaryDto[]> {
+    const startDate = new Date(year, 0, 1);
+    const endDate = new Date(year + 1, 0, 1);
+
+    const posts = await prisma.post.findMany({
+      where: {
+        publishedAt: {
+          gte: startDate,
+          lt: endDate,
+        },
+      },
+      orderBy: { publishedAt: 'desc' },
+      include: {
+        author: true,
+        category: true,
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
+      },
+    });
+    return posts.map(toPostSummaryDto);
+  },
+
+  async getArchiveStatistics(): Promise<{ year: number; count: number }[]> {
+    const posts = await prisma.post.findMany({
+      where: {
+        publishedAt: { not: null },
+      },
+      select: {
+        publishedAt: true,
+      },
+    });
+
+    const yearCounts = new Map<number, number>();
+    posts.forEach((post) => {
+      if (post.publishedAt) {
+        const year = post.publishedAt.getFullYear();
+        yearCounts.set(year, (yearCounts.get(year) || 0) + 1);
+      }
+    });
+
+    return Array.from(yearCounts.entries())
+      .map(([year, count]) => ({ year, count }))
+      .sort((a, b) => b.year - a.year);
+  },
 };

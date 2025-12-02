@@ -1,19 +1,13 @@
-import { useParams } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import { PostCard } from '@/components/blog/PostCard';
-import { mockPosts } from '@/mock/posts';
 import { Calendar } from 'lucide-react';
+import type { PostSummaryDto } from 'ssr-blog-shared';
 
 export function YearArchivePage() {
-  const { year } = useParams();
-  const targetYear = Number(year);
-
-  const posts = mockPosts.filter(
-    (post) => new Date(post.publishedAt).getFullYear() === targetYear
-  );
-
-  if (isNaN(targetYear)) {
-    return <div className="text-center py-10">无效的年份</div>;
-  }
+  const { posts, year } = useLoaderData() as {
+    posts: PostSummaryDto[];
+    year: number;
+  };
 
   return (
     <div className="space-y-8">
@@ -21,7 +15,7 @@ export function YearArchivePage() {
         <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 text-primary">
           <Calendar className="w-8 h-8" />
         </div>
-        <h1 className="text-3xl font-bold mb-2">{targetYear} 年归档</h1>
+        <h1 className="text-3xl font-bold mb-2">{year} 年归档</h1>
         <p className="text-muted-foreground">共 {posts.length} 篇文章</p>
       </div>
 

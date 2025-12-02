@@ -1,22 +1,13 @@
-import { useParams } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import { PostCard } from '@/components/blog/PostCard';
-import { mockPosts } from '@/mock/posts';
 import { Tag } from 'lucide-react';
+import type { TagDto, PostSummaryDto } from 'ssr-blog-shared';
 
 export function TagPage() {
-  const { id } = useParams();
-  const tagId = Number(id);
-
-  // Find tag info from posts
-  const tag = mockPosts.flatMap((p) => p.tags).find((t) => t.id === tagId);
-
-  const posts = mockPosts.filter((post) =>
-    post.tags.some((t) => t.id === tagId)
-  );
-
-  if (!tag) {
-    return <div className="text-center py-10">标签不存在</div>;
-  }
+  const { tag, posts } = useLoaderData() as {
+    tag: TagDto;
+    posts: PostSummaryDto[];
+  };
 
   return (
     <div className="space-y-8">

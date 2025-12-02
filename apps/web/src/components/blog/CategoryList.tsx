@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Folder } from 'lucide-react';
-import type { Category } from '@/types/blog';
+import type { CategoryDto } from 'ssr-blog-shared';
 
 interface CategoryListProps {
-  categories: Category[];
+  categories: CategoryDto[];
 }
 
 export function CategoryList({ categories }: CategoryListProps) {
@@ -25,9 +25,9 @@ export function CategoryList({ categories }: CategoryListProps) {
                 <Folder className="w-5 h-5" />
                 {category.name}
               </div>
-              {category.count !== undefined && (
+              {category.postCount !== undefined && (
                 <Badge variant="secondary" className="text-xs">
-                  {category.count} 篇文章
+                  {category.postCount} 篇文章
                 </Badge>
               )}
             </div>

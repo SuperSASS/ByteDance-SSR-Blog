@@ -15,6 +15,10 @@ router.get('/posts', postApiController.getPosts);
 router.get('/posts/:id', postApiController.getPost);
 router.put('/posts/:id', postApiController.updatePost);
 router.delete('/posts/:id', postApiController.deletePost);
+router.get('/posts/category/:categoryId', postApiController.getPostsByCategory);
+router.get('/posts/tag/:tagId', postApiController.getPostsByTag);
+router.get('/posts/year/:year', postApiController.getPostsByYear);
+router.get('/archive/statistics', postApiController.getArchiveStatistics);
 
 // User routes
 router.post('/users', userApiController.createUser);
