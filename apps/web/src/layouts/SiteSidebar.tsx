@@ -15,10 +15,11 @@ export function SiteSidebar() {
       {/* Avatar and Site Info */}
       <div className="flex flex-col items-center mb-8">
         <Link to="/" className="mb-4">
-          {/* TODO: 头像 */}
-          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-4xl font-bold text-primary-foreground">
-            B
-          </div>
+          <img
+            src="/avatar.jpg"
+            alt="Avatar"
+            className="w-24 h-24 rounded-full object-cover ring-2 ring-primary/20 hover:ring-primary/40 transition-all"
+          />
         </Link>
         <h1 className="text-xl font-bold mb-1">Super SASS……</h1>
         <p className="text-sm text-muted-foreground text-center">万华散尽……</p>
