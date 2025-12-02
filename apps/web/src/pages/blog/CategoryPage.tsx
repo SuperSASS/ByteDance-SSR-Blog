@@ -1,30 +1,28 @@
 import { useParams } from 'react-router-dom';
 import { PostCard } from '@/components/blog/PostCard';
 import { mockPosts } from '@/mock/posts';
-import { Tag } from 'lucide-react';
+import { Folder } from 'lucide-react';
 
-export function TagPage() {
+export function CategoryPage() {
   const { id } = useParams();
-  const tagId = Number(id);
+  const categoryId = Number(id);
 
-  // Find tag info from posts
-  const tag = mockPosts.flatMap((p) => p.tags).find((t) => t.id === tagId);
+  const category = mockPosts.find(
+    (p) => p.category.id === categoryId
+  )?.category;
+  const posts = mockPosts.filter((post) => post.category.id === categoryId);
 
-  const posts = mockPosts.filter((post) =>
-    post.tags.some((t) => t.id === tagId)
-  );
-
-  if (!tag) {
-    return <div className="text-center py-10">标签不存在</div>;
+  if (!category) {
+    return <div className="text-center py-10">分类不存在</div>;
   }
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col items-center justify-center py-10 bg-card rounded-lg border shadow-sm">
         <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 text-primary">
-          <Tag className="w-8 h-8" />
+          <Folder className="w-8 h-8" />
         </div>
-        <h1 className="text-3xl font-bold mb-2">{tag.name}</h1>
+        <h1 className="text-3xl font-bold mb-2">{category.name}</h1>
         <p className="text-muted-foreground">共 {posts.length} 篇文章</p>
       </div>
 

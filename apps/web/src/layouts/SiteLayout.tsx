@@ -20,11 +20,11 @@ export function SiteLayout() {
       />
 
       {/* Main layout */}
-      <div className="relative flex">
+      <div className="relative flex justify-center">
         <SiteSidebar />
 
         <main
-          className={`flex-1 ${showRightSidebar ? 'max-w-4xl' : 'max-w-6xl'} mx-auto p-8`}
+          className={`flex-1 ${showRightSidebar ? 'max-w-3xl' : 'max-w-5xl'} p-6 transition-all duration-300`}
         >
           <Outlet />
         </main>

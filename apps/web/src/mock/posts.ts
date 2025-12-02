@@ -1,32 +1,6 @@
-export interface MockPost {
-  id: number;
-  title: string;
-  slug: string;
-  summary: string;
-  content: string;
-  coverImageUrl: string | null;
-  publishedAt: string;
-  createdAt: string;
-  updatedAt: string;
-  author: {
-    id: number;
-    username: string;
-  };
-  category: {
-    id: number;
-    name: string;
-    slug: string;
-  };
-  tags: Array<{
-    id: number;
-    name: string;
-    slug: string;
-  }>;
-  readTime: number; // minutes
-  views: number;
-}
+import type { Post } from '@/types/blog';
 
-export const mockPosts: MockPost[] = [
+export const mockPosts: Post[] = [
   {
     id: 1,
     title: 'Hello SSR Blog',
@@ -39,12 +13,7 @@ export const mockPosts: MockPost[] = [
 
 ## 技术栈
 
-- React 19
-- Koa 3
-- Prisma
-- SQLite
-
-## 特性
+{{ ... }}
 
 - 服务端渲染 (SSR)
 - 深色模式支持
@@ -56,7 +25,7 @@ export const mockPosts: MockPost[] = [
     createdAt: '2024-12-01T09:00:00Z',
     updatedAt: '2024-12-01T10:00:00Z',
     author: { id: 1, username: 'admin' },
-    category: { id: 1, name: '科技', slug: 'tech' },
+    category: { id: 1, name: '科技', slug: 'tech', count: 3 },
     tags: [
       { id: 1, name: 'React', slug: 'react' },
       { id: 2, name: 'SSR', slug: 'ssr' },
@@ -82,7 +51,7 @@ export const mockPosts: MockPost[] = [
     createdAt: '2024-11-28T13:00:00Z',
     updatedAt: '2024-11-28T14:30:00Z',
     author: { id: 1, username: 'admin' },
-    category: { id: 1, name: '科技', slug: 'tech' },
+    category: { id: 1, name: '科技', slug: 'tech', count: 3 },
     tags: [
       { id: 3, name: 'TypeScript', slug: 'typescript' },
       { id: 4, name: '编程', slug: 'programming' },
@@ -104,7 +73,7 @@ export const mockPosts: MockPost[] = [
     createdAt: '2024-11-25T07:00:00Z',
     updatedAt: '2024-11-25T08:00:00Z',
     author: { id: 1, username: 'admin' },
-    category: { id: 2, name: '生活', slug: 'life' },
+    category: { id: 2, name: '生活', slug: 'life', count: 1 },
     tags: [
       { id: 5, name: '随笔', slug: 'essay' },
       { id: 6, name: '咖啡', slug: 'coffee' },
@@ -127,7 +96,7 @@ Prisma 是一个现代化的 ORM...`,
     createdAt: '2024-11-20T15:00:00Z',
     updatedAt: '2024-11-20T16:00:00Z',
     author: { id: 1, username: 'admin' },
-    category: { id: 1, name: '科技', slug: 'tech' },
+    category: { id: 1, name: '科技', slug: 'tech', count: 3 },
     tags: [
       { id: 7, name: 'Prisma', slug: 'prisma' },
       { id: 8, name: 'Database', slug: 'database' },
@@ -150,7 +119,7 @@ Prisma 是一个现代化的 ORM...`,
     createdAt: '2024-11-15T11:00:00Z',
     updatedAt: '2024-11-15T12:00:00Z',
     author: { id: 1, username: 'admin' },
-    category: { id: 1, name: '科技', slug: 'tech' },
+    category: { id: 3, name: '设计', slug: 'design', count: 1 },
     tags: [
       { id: 9, name: 'UI/UX', slug: 'ui-ux' },
       { id: 10, name: '设计', slug: 'design' },

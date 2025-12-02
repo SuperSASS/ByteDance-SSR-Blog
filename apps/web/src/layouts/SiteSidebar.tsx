@@ -5,9 +5,9 @@ import { ThemeToggle } from '@/components/common/ThemeToggle';
 export function SiteSidebar() {
   const navLinks = [
     { to: '/', icon: Home, label: '主页' },
-    { to: '/about', icon: User, label: '关于' },
     { to: '/archive', icon: Archive, label: '归档' },
     { to: '/search', icon: Search, label: '搜索' },
+    { to: '/about', icon: User, label: '关于' },
   ];
 
   return (
