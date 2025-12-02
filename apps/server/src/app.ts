@@ -7,6 +7,7 @@ import logger from './utils/logger.js';
 // import path from 'path';
 import ssrRouter from './routes/ssr.js';
 import apiRouter from './routes/api.js';
+import './utils/globalReact.js';
 
 const app = new Koa();
 const PORT = process.env.PORT || 3000;

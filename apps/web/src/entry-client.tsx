@@ -1,8 +1,10 @@
 import React from 'react';
+import '@vitejs/plugin-react/preamble';
 import { hydrateRoot } from 'react-dom/client';
 import { createBrowserRouter } from 'react-router-dom';
 import { routes } from './routes/routes';
 import { AppShell } from './app/AppShell';
+import './index.css';
 
 declare global {
   interface Window {

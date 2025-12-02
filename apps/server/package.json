@@ -13,14 +13,16 @@
   },
   "dependencies": {
     "@koa/router": "^14.0.0",
+    "@types/react": "^19.2.7",
     "dotenv": "^17.2.3",
     "koa": "^3.1.1",
     "koa-bodyparser": "^4.4.1",
     "koa-logger": "^4.0.0",
     "koa-static": "^5.0.0",
-    "winston": "^3.18.3",
     "prisma-adapter-node-sqlite": "^0.0.1",
-    "ssr-blog-shared": "workspace:*"
+    "react": "^19.2.0",
+    "ssr-blog-shared": "workspace:*",
+    "winston": "^3.18.3"
   },
   "devDependencies": {
     "@types/koa": "^3.0.1",

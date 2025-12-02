@@ -6,8 +6,8 @@
   "description": "A SSR & SPA blog based on React 18 + Koa 3 + TypeScript + Vite, with monorepo organization.",
   "scripts": {
     "dev": "pnpm -r --parallel dev",
-    "dev:web": "pnpm --filter web dev",
-    "dev:server": "pnpm --filter server dev",
+    "dev:web": "pnpm --filter ssr-blog-web dev",
+    "dev:server": "pnpm --filter ssr-blog-server dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
@@ -27,6 +27,7 @@
     "globals": "^16.5.0",
     "husky": "^9.0.0",
     "lint-staged": "^16.2.7",
+    "nodemon": "^3.1.11",
     "prettier": "^3.0.0",
     "prisma": "^7.0.1",
     "tsx": "^4.21.0",
