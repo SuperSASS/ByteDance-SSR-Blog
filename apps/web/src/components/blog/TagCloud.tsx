@@ -9,7 +9,7 @@ export function TagCloud() {
         {mockTags.map((tag) => (
           <Link
             key={tag.id}
-            to={`/tags/${tag.slug}`}
+            to={`/tags/${tag.id}`}
             className="inline-block px-3 py-1 text-sm rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors"
           >
             {tag.name}

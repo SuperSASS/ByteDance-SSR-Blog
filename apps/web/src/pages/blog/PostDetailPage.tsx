@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Calendar, Clock, Eye, Folder } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -36,13 +36,15 @@ export function PostDetailPage() {
           {/* Title and Meta */}
           <header className="mb-8 border-b pb-8">
             <div className="flex items-center gap-2 mb-4">
-              <Badge
-                variant="default"
-                className="bg-primary/90 hover:bg-primary"
-              >
-                <Folder className="w-3 h-3 mr-1" />
-                {post.category.name}
-              </Badge>
+              <Link to={`/categories/${post.category.id}`}>
+                <Badge
+                  variant="default"
+                  className="bg-primary/90 hover:bg-primary cursor-pointer"
+                >
+                  <Folder className="w-3 h-3 mr-1" />
+                  {post.category.name}
+                </Badge>
+              </Link>
             </div>
 
             <h1 className="text-4xl font-bold mb-6 leading-tight">
@@ -51,9 +53,14 @@ export function PostDetailPage() {
 
             <div className="flex flex-wrap gap-2 mb-6">
               {post.tags.map((tag) => (
-                <Badge key={tag.id} variant="secondary">
-                  {tag.name}
-                </Badge>
+                <Link key={tag.id} to={`/tags/${tag.id}`}>
+                  <Badge
+                    variant="secondary"
+                    className="hover:bg-secondary/80 cursor-pointer"
+                  >
+                    {tag.name}
+                  </Badge>
+                </Link>
               ))}
             </div>
 

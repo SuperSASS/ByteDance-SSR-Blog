@@ -5,6 +5,7 @@ import { PostDetailPage } from '@/pages/blog/PostDetailPage';
 import { TagPage } from '@/pages/blog/TagPage';
 import { CategoryPage } from '@/pages/blog/CategoryPage';
 import { ArchivePage } from '@/pages/blog/ArchivePage';
+import { YearArchivePage } from '@/pages/blog/YearArchivePage';
 import { AboutPage } from '@/pages/blog/AboutPage';
 import { NotFoundPage } from '@/pages/boundary/NotFoundPage';
 
@@ -32,6 +33,10 @@ export const routes: RouteObject[] = [
       {
         path: 'archive',
         element: <ArchivePage />,
+      },
+      {
+        path: 'archives/:year',
+        element: <YearArchivePage />,
       },
       {
         path: 'about',

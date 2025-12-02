@@ -10,8 +10,8 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   return (
-    <Link to={`/posts/${post.id}`} className="block group">
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
+    <Link to={`/posts/${post.id}`} className="block group h-full">
+      <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 h-full flex flex-col bg-card/50 backdrop-blur-sm border-muted/40">
         {post.coverImageUrl && (
           <div className="aspect-[16/6] overflow-hidden relative">
             <img
@@ -20,14 +20,18 @@ export function PostCard({ post }: PostCardProps) {
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
             {/* Category Badge over Image */}
-            <div className="absolute top-3 left-3">
-              <Badge
-                variant="default"
-                className="bg-primary/90 hover:bg-primary"
-              >
-                <Folder className="w-3 h-3 mr-1" />
-                {post.category.name}
-              </Badge>
+            <div className="absolute top-3 left-3 z-10">
+              <object>
+                <Link to={`/categories/${post.category.id}`}>
+                  <Badge
+                    variant="default"
+                    className="bg-primary/90 hover:bg-primary cursor-pointer"
+                  >
+                    <Folder className="w-3 h-3 mr-1" />
+                    {post.category.name}
+                  </Badge>
+                </Link>
+              </object>
             </div>
           </div>
         )}
@@ -35,13 +39,16 @@ export function PostCard({ post }: PostCardProps) {
           <div className="flex flex-wrap gap-2 mb-3">
             {/* Show tags if needed, or maybe just keep them minimal since category is emphasized */}
             {post.tags.slice(0, 3).map((tag) => (
-              <Badge
-                key={tag.id}
-                variant="secondary"
-                className="text-xs font-normal"
-              >
-                {tag.name}
-              </Badge>
+              <object key={tag.id}>
+                <Link to={`/tags/${tag.id}`}>
+                  <Badge
+                    variant="secondary"
+                    className="text-xs font-normal hover:bg-secondary/80 cursor-pointer"
+                  >
+                    {tag.name}
+                  </Badge>
+                </Link>
+              </object>
             ))}
           </div>
           <h2 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors line-clamp-2">
