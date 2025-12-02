@@ -3,8 +3,9 @@ import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import koaLogger from 'koa-logger';
 import logger from './utils/logger.js';
-// import serve from 'koa-static';
-// import path from 'path';
+import serve from 'koa-static';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import ssrRouter from './routes/ssr.js';
 import apiRouter from './routes/api.js';
 import './utils/globalReact.js';
@@ -20,8 +21,13 @@ app.use(
 );
 app.use(bodyParser());
 
-// 静态资源（后续会用到）
-// app.use(serve(path.join(__dirname, '../web/dist')));
+// 静态资源中间件 - 提供 web/public 目录下的静态文件
+// 例如：favicon.ico, robots.txt, 图片等
+app.use(
+  serve(
+    path.join(path.dirname(fileURLToPath(import.meta.url)), '../../web/public')
+  )
+);
 
 // API routes (must come before SSR catch-all)
 app.use(apiRouter.routes());
