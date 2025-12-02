@@ -28,6 +28,12 @@ app.use(
     path.join(path.dirname(fileURLToPath(import.meta.url)), '../../web/public')
   )
 );
+app.use(
+  serve(
+    path.join(path.dirname(fileURLToPath(import.meta.url)), '../../web/dist'),
+    { index: false }
+  )
+);
 
 // API routes (must come before SSR catch-all)
 app.use(apiRouter.routes());

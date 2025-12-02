@@ -1,6 +1,37 @@
 import Router from '@koa/router';
 import type Koa from 'koa';
 import { htmlTemplate } from '../utils/htmlTemplate.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const MANIFEST_PATH = path.resolve(
+  __dirname,
+  '../../../web/dist/.vite/manifest.json'
+);
+
+let manifest: Record<string, any> | null = null;
+
+function getStyles(): string[] {
+  if (!manifest) {
+    try {
+      if (fs.existsSync(MANIFEST_PATH)) {
+        manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf-8'));
+      }
+    } catch (e) {
+      console.error('Failed to load manifest:', e);
+    }
+  }
+
+  if (manifest) {
+    const entry = manifest['index.html'];
+    if (entry && entry.css) {
+      return entry.css.map((file: string) => `/${file}`);
+    }
+  }
+  return [];
+}
 
 const router = new Router();
 
@@ -46,8 +77,9 @@ router.get(/(.*)/, async (ctx: Koa.Context) => {
     }
 
     // 5. 正常渲染HTML
+    const styles = getStyles();
     ctx.type = 'text/html';
-    ctx.body = htmlTemplate(result.html, result.context);
+    ctx.body = htmlTemplate(result.html, result.context, styles);
   } catch (e) {
     console.error('SSR Render Error:', e);
     ctx.status = 500;
