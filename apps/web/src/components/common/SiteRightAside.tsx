@@ -2,7 +2,7 @@ import { SearchBox } from '@/components/blog/SearchBox';
 import { ArchiveList } from '@/components/blog/ArchiveList';
 import { TagCloud } from '@/components/blog/TagCloud';
 import { Card, CardContent } from '@/components/ui/card';
-import type { CategoryDto, TagDto } from 'ssr-blog-shared';
+import type { TagDto } from 'ssr-blog-shared';
 
 interface SiteRightAsideProps {
   tags?: TagDto[];

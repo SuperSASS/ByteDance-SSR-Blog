@@ -6,9 +6,8 @@ import { Calendar, ArrowRight } from 'lucide-react';
 import type { CategoryDto, PostSummaryDto } from 'ssr-blog-shared';
 
 export function ArchivePage() {
-  const { categories, archives, allPosts } = useLoaderData() as {
+  const { categories, allPosts } = useLoaderData() as {
     categories: CategoryDto[];
-    archives: { year: number; count: number }[];
     allPosts: PostSummaryDto[];
   };
 

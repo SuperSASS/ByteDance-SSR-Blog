@@ -4,7 +4,7 @@ import { SiteRightAside } from '@/components/common/SiteRightAside';
 import type { PostSummaryDto, CategoryDto, TagDto } from 'ssr-blog-shared';
 
 export function HomePage() {
-  const { posts, categories, tags, archives } = useLoaderData() as {
+  const { posts, tags, archives } = useLoaderData() as {
     posts: PostSummaryDto[];
     categories: CategoryDto[];
     tags: TagDto[];
