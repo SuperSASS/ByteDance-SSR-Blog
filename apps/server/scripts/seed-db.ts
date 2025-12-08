@@ -1,5 +1,6 @@
 // apps/server/src/scripts/seed-db.ts
-import { prisma } from '../db/prisma.js';
+import { prisma } from '../src/db/prisma.js';
+import { hashPassword } from '../src/utils/hash.js';
 
 async function main() {
   console.log('🌱 Starting database seed...');
@@ -16,18 +17,7 @@ async function main() {
   ]);
   console.log('🧹 Tables cleared.\n');
 
-  // 1. Create Users
-  console.log('👤 Creating users...');
-  const adminUser = await prisma.user.create({
-    data: {
-      username: 'admin',
-      passwordHash: 'hashed_admin_password', // TODO: bcrypt hash
-      role: 'ADMIN',
-    },
-  });
-  console.log('👤 Admin user created:', adminUser.id);
-
-  // 2. Create Categories
+  // 1. Create Categories
   console.log('📂 Creating categories...');
   const categories = await Promise.all([
     prisma.category.create({ data: { name: '前端开发', slug: 'frontend' } }),
@@ -37,6 +27,57 @@ async function main() {
     prisma.category.create({ data: { name: '设计', slug: 'design' } }),
   ]);
   console.log('📂 Categories created:', categories.length);
+
+  // 2. Create Users
+  console.log('👤 Creating users...');
+  // 创建管理员用户
+  const adminPassword = await hashPassword('admin123');
+  const admin = await prisma.user.upsert({
+    where: { username: 'admin' },
+    update: {},
+    create: {
+      username: 'admin',
+      passwordHash: adminPassword,
+      role: 'ADMIN',
+    },
+  });
+  console.log('✓ 管理员用户创建成功:', admin.username);
+
+  // 创建编辑用户
+  const editorPassword = await hashPassword('editor123');
+  const editor = await prisma.user.upsert({
+    where: { username: 'editor' },
+    update: {},
+    create: {
+      username: 'editor',
+      passwordHash: editorPassword,
+      role: 'EDITOR',
+    },
+  });
+  console.log('✓ 编辑用户创建成功:', editor.username);
+
+  // 如果有分类,为编辑用户分配权限
+  const firstCategory = categories[0];
+  await prisma.userCategoryPermission.upsert({
+    where: {
+      userId_categoryId: {
+        userId: editor.id,
+        categoryId: firstCategory.id,
+      },
+    },
+    update: {},
+    create: {
+      userId: editor.id,
+      categoryId: firstCategory.id,
+    },
+  });
+  console.log(
+    `✓ 为编辑用户 ${editor.username} 分配分类权限: ${firstCategory.name}`
+  );
+
+  console.log('\n测试用户创建完成!');
+  console.log('管理员账号: admin / admin123');
+  console.log('编辑账号: editor / editor123');
 
   // 3. Create Tags
   console.log('🏷️ Creating tags...');
@@ -208,11 +249,11 @@ Tailwind CSS 是一个功能类优先的 CSS 框架...`,
   ];
 
   for (const postData of postsData) {
-    const { tagIds, readTime, views, ...restData } = postData;
+    const { tagIds, ...restData } = postData;
     await prisma.post.create({
       data: {
         ...restData,
-        authorId: adminUser.id,
+        authorId: admin.id,
         tags: {
           create: tagIds.map((tagId) => ({
             tag: { connect: { id: tagId } },

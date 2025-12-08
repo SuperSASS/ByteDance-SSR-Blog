@@ -5,3 +5,4 @@ export * from './dto/user.dto';
 export * from './dto/category.dto';
 export * from './dto/tag.dto';
 export * from './dto/permission.dto';
+export * from './dto/auth.dto';

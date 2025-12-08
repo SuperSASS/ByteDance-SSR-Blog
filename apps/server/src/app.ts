@@ -1,4 +1,4 @@
-import 'dotenv/config';
+//import dotenv from "dotenv";
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import koaLogger from 'koa-logger';
@@ -9,6 +9,8 @@ import { fileURLToPath } from 'url';
 import ssrRouter from './routes/ssr.js';
 import apiRouter from './routes/api.js';
 import './utils/globalReact.js';
+
+//dotenv.config({ path: "../../.env" }); // 如果用 import 'dotenv/config'，加载的是当前文件（node 运行目录）所在目录的 .env
 
 const app = new Koa();
 const PORT = process.env.PORT || 3000;

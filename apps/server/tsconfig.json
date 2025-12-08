@@ -15,7 +15,8 @@
     /* 路径别名 */
     "baseUrl": "../..",
     "paths": {
-      "@/*": ["apps/web/src/*"] // 这里与 web 项目中的路径别名保持一致，不能指向自己，否则会冲突
+      "@/*": ["apps/web/src/*"], // 这里与 web 项目中的路径别名保持一致，不能指向自己，否则会冲突
+      "@shared/*": ["packages/shared/src/*"]
     }
   },
   "include": ["src"],

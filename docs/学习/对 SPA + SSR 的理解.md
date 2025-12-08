@@ -351,7 +351,7 @@ hydrateRoot(
 2. 解决文件 build 后 hash 后缀  
    有两种方法：
    1. build 固定文件名，不生成 hash：在 vite.config.ts 中配置`build.rollupOptions.output.entryFileNames`  
-      ![解决方法 1](<images/image-对 SPA + SSR 的理解.png>)，
+      ![解决方法 1](<images/image-对 SPA + SSR 的理解.png>)
    2. （工程版）用 manifest.json 动态查  
       `vite.config.ts`中开启`manifest: true`，然后 build 后会生成`manifest.json`，其中包含 tsx 文件转换后的 js 带 hash 文件名，  
       然后在管静态资源的`assest.ts`，解析`manifest.json`，从而动态生成`entry-client.js`的链接。  

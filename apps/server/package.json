@@ -4,20 +4,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts,tsx,json --exec tsx src/app.ts",
+    "dev": "nodemon --watch src --ext ts,tsx,json --exec tsx src/app.ts -r dotenv/config dotenv_config_path=../../.env",
     "build": "tsc",
     "lint": "eslint .",
     "start": "node dist/app.js",
-    "db:reset": "tsx src/scripts/seed-db.ts",
+    "db:reset": "tsx scripts/seed-db.ts",
     "db:studio": "prisma studio --url file:../../dev.db"
   },
   "dependencies": {
     "@koa/router": "^14.0.0",
     "@types/react": "^19.2.7",
+    "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
+    "jsonwebtoken": "^9.0.2",
     "koa": "^3.1.1",
     "koa-bodyparser": "^4.4.1",
+    "koa-jwt": "^4.0.4",
     "koa-logger": "^4.0.0",
+    "koa-mount": "^4.2.0",
     "koa-static": "^5.0.0",
     "prisma-adapter-node-sqlite": "^0.0.1",
     "react": "^19.2.0",
@@ -25,9 +29,11 @@
     "winston": "^3.18.3"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/koa": "^3.0.1",
     "@types/koa-bodyparser": "^4.3.13",
     "@types/koa-logger": "^3.1.5",
+    "@types/koa-mount": "^4.0.5",
     "@types/koa-static": "^4.0.4",
     "@types/koa__router": "^12.0.5"
   }

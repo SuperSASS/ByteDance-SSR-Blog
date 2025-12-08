@@ -1,6 +1,6 @@
 // User DTOs
 
-export type Role = 'USER' | 'ADMIN';
+export type Role = 'USER' | 'EDITOR' | 'ADMIN';
 
 export interface UserDto {
   id: number;
