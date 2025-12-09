@@ -3,16 +3,9 @@
 export interface PermissionDto {
   userId: number;
   categoryId: number;
-  user?: {
-    id: number;
-    username: string;
-  };
-  category?: {
-    id: number;
-    name: string;
-    slug: string;
-  };
 }
+
+export type UserPermissionDto = PermissionDto[];
 
 export interface CreatePermissionDto {
   userId: number;

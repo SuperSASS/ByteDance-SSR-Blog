@@ -1,4 +1,10 @@
-import { Outlet, Link, useNavigate, useLoaderData } from 'react-router-dom';
+import {
+  Outlet,
+  Link,
+  useNavigate,
+  useLoaderData,
+  useLocation,
+} from 'react-router-dom';
 import {
   LayoutDashboard,
   FileText,
@@ -7,9 +13,11 @@ import {
   Users,
   LogOut,
 } from 'lucide-react';
+import { Toaster } from '@/components/ui/toaster';
 import { Button } from '@/components/ui/button';
 import type { AuthUserDto } from 'ssr-blog-shared';
 import * as authService from '@/services/auth.client';
+import { toast } from 'sonner';
 
 const convertRoleToString = (role: string) => {
   switch (role) {
@@ -26,34 +34,55 @@ const convertRoleToString = (role: string) => {
 
 export function AdminLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useLoaderData() as AuthUserDto;
 
   const handleLogout = async () => {
     try {
       await authService.logout();
       navigate('/admin/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
+    } catch {
+      toast.error('登出失败，请稍后重试');
     }
   };
 
   const menuItems = [
-    { path: '/admin', icon: LayoutDashboard, label: '仪表盘' },
-    { path: '/admin/posts', icon: FileText, label: '文章管理' },
-    { path: '/admin/categories', icon: FolderOpen, label: '分类管理' },
-    { path: '/admin/tags', icon: Tags, label: '标签管理' },
-    { path: '/admin/users', icon: Users, label: '用户管理' },
+    {
+      path: '/admin',
+      icon: LayoutDashboard,
+      label: '仪表盘',
+      roles: ['ADMIN', 'EDITOR', 'USER'],
+    },
+    {
+      path: '/admin/posts',
+      icon: FileText,
+      label: '文章管理',
+      roles: ['ADMIN', 'EDITOR'],
+    },
+    {
+      path: '/admin/categories',
+      icon: FolderOpen,
+      label: '分类管理',
+      roles: ['ADMIN'],
+    },
+    { path: '/admin/tags', icon: Tags, label: '标签管理', roles: ['ADMIN'] },
+    { path: '/admin/users', icon: Users, label: '用户管理', roles: ['ADMIN'] },
   ];
+
+  const filteredMenuItems = menuItems.filter((item) =>
+    item.roles.includes(user.role)
+  );
 
   return (
     <div className="flex h-screen bg-gray-100">
+      <Toaster position="top-center" richColors />
       {/* 左侧导航栏 */}
       <aside className="w-64 bg-white shadow-md flex flex-col">
         <div className="p-6">
           <h1 className="text-2xl font-bold text-gray-800">博客后台</h1>
         </div>
         <nav className="mt-6 flex-1">
-          {menuItems.map((item) => {
+          {filteredMenuItems.map((item) => {
             const Icon = item.icon;
             return (
               <Link
@@ -62,7 +91,15 @@ export function AdminLayout() {
                 className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
               >
                 <Icon className="w-5 h-5 mr-3" />
-                <span>{item.label}</span>
+                <span
+                  className={
+                    location.pathname === item.path
+                      ? 'font-bold text-primary'
+                      : ''
+                  }
+                >
+                  {item.label}
+                </span>
               </Link>
             );
           })}

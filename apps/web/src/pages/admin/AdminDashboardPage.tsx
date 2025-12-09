@@ -1,3 +1,4 @@
+import { useLoaderData } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -5,8 +6,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import type { DashboardStats, PermissionData } from '@/services/api/dashboard';
+
+interface LoaderData {
+  stats: DashboardStats;
+  permissions: PermissionData;
+}
 
 export function AdminDashboardPage() {
+  const { stats, permissions } = useLoaderData() as LoaderData;
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">仪表盘</h1>
@@ -18,7 +27,7 @@ export function AdminDashboardPage() {
             <CardDescription>已发布的文章数量</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">-</p>
+            <p className="text-3xl font-bold">{stats.posts}</p>
           </CardContent>
         </Card>
 
@@ -28,7 +37,7 @@ export function AdminDashboardPage() {
             <CardDescription>文章分类数量</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">-</p>
+            <p className="text-3xl font-bold">{stats.categories}</p>
           </CardContent>
         </Card>
 
@@ -38,7 +47,7 @@ export function AdminDashboardPage() {
             <CardDescription>文章标签数量</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">-</p>
+            <p className="text-3xl font-bold">{stats.tags}</p>
           </CardContent>
         </Card>
 
@@ -48,24 +57,44 @@ export function AdminDashboardPage() {
             <CardDescription>注册用户数量</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">-</p>
+            <p className="text-3xl font-bold">{stats.users}</p>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>欢迎使用博客后台管理系统</CardTitle>
-          <CardDescription>
-            这是阶段 6 的占位页面,具体功能将在阶段 7 实现
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-600">
-            您可以通过左侧菜单访问各个管理模块。目前各模块仅为占位页面,完整功能将在下一阶段开发。
-          </p>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>权限概览</CardTitle>
+            <CardDescription>您当前拥有的管理权限</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-medium mb-2">分类编辑权限:</h3>
+                {permissions.isAdmin ? (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    所有分类 (管理员)
+                  </span>
+                ) : permissions.categories.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {permissions.categories.map((cat) => (
+                      <span
+                        key={cat.id}
+                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                      >
+                        {cat.name}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <span className="text-gray-500 text-sm">暂无分类权限</span>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
