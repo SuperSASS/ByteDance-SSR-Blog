@@ -27,7 +27,7 @@ let manifest: Manifest | null = null;
  */
 function getStyles(manifest: Manifest | null): string[] {
   if (manifest) {
-    const srcEntry = manifest['src/entry-client.tsx'] || manifest['index.html'];
+    const srcEntry = manifest['index.html'];
     if (srcEntry && srcEntry.css) {
       return srcEntry.css.map((file: string) => `/${file}`);
     }
@@ -40,7 +40,7 @@ function getStyles(manifest: Manifest | null): string[] {
  */
 function getScripts(manifest: Manifest | null): string[] {
   if (manifest) {
-    const srcEntry = manifest['src/entry-client.tsx'];
+    const srcEntry = manifest['index.html'];
     if (srcEntry && srcEntry.file) {
       return [`/${srcEntry.file}`];
     }
