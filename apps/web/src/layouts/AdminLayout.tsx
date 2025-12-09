@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/common/ThemeToggle';
 import type { AuthUserDto } from 'ssr-blog-shared';
 import * as authService from '@/services/auth.client';
 import { toast } from 'sonner';
@@ -106,6 +107,9 @@ export function AdminLayout() {
             );
           })}
         </nav>
+        <div className="flex mx-auto items-center gap-2 mb-3">
+          <ThemeToggle />
+        </div>
 
         {/* User Info & Logout */}
         <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
