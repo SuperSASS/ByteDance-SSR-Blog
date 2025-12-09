@@ -1,6 +1,6 @@
 import type { Context } from 'koa';
 import { prisma } from '../db/prisma.js';
-import { Role } from '../db/generated/client/index.js';
+import { Role } from '@prisma/client';
 
 export const dashboardController = {
   async getStats(ctx: Context) {

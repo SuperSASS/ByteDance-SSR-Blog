@@ -3,8 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  // 生成 client 路径
-  output   = "../apps/server/src/db/generated/client"
+  // 使用默认的 node_modules/@prisma/client 位置
 }
 
 datasource db {

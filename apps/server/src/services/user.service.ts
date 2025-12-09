@@ -1,5 +1,5 @@
 import { prisma } from '../db/prisma.js';
-import { User } from '../db/generated/client/index.js';
+import { User } from '@prisma/client';
 import type {
   CreateUserDto,
   UpdateUserDto,
