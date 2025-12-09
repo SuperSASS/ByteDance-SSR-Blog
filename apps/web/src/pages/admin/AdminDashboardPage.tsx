@@ -22,7 +22,7 @@ export function AdminDashboardPage() {
         仪表盘
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <Card>
           <CardHeader>
             <CardTitle>文章总数</CardTitle>
@@ -56,10 +56,20 @@ export function AdminDashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>用户总数</CardTitle>
-            <CardDescription>注册用户数量</CardDescription>
+            <CardDescription>创建用户数量</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{stats.users}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>总浏览数</CardTitle>
+            <CardDescription>所有文章的浏览量总和</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">{stats.totalViews}</p>
           </CardContent>
         </Card>
       </div>

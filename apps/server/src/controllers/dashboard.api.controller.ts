@@ -4,18 +4,28 @@ import { Role } from '@prisma/client';
 
 export const dashboardController = {
   async getStats(ctx: Context) {
-    const [postCount, categoryCount, tagCount, userCount] = await Promise.all([
-      prisma.post.count({ where: { publishedAt: { not: null } } }),
-      prisma.category.count(),
-      prisma.tag.count(),
-      prisma.user.count(),
-    ]);
+    const [postCount, categoryCount, tagCount, userCount, totalViews] =
+      await Promise.all([
+        prisma.post.count({ where: { publishedAt: { not: null } } }),
+        prisma.category.count(),
+        prisma.tag.count(),
+        prisma.user.count(),
+
+        // 所有已发布文章浏览量总和
+        prisma.post.aggregate({
+          where: { publishedAt: { not: null } }, // 如果希望包含草稿，就去掉 where
+          _sum: {
+            views: true,
+          },
+        }),
+      ]);
 
     ctx.body = {
       posts: postCount,
       categories: categoryCount,
       tags: tagCount,
       users: userCount,
+      totalViews: totalViews._sum.views,
     };
   },
 
