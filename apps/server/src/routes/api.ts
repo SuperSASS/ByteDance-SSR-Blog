@@ -30,6 +30,7 @@ router.get('/posts/:id', postApiController.getPost);
 router.get('/posts/category/:categoryId', postApiController.getPostsByCategory);
 router.get('/posts/tag/:tagId', postApiController.getPostsByTag);
 router.get('/posts/year/:year', postApiController.getPostsByYear);
+router.post('/posts/:id/view', postApiController.incrementView);
 router.get('/archive/statistics', postApiController.getArchiveStatistics);
 
 // Category routes - 只读接口

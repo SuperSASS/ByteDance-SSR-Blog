@@ -1,12 +1,21 @@
+import { useEffect, useRef } from 'react';
 import { useLoaderData, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Calendar, Clock, Eye, Folder } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import type { PostDetailDto } from 'ssr-blog-shared';
+import { postApi } from '@/services/api/post';
 
 export function PostDetailPage() {
   const { post } = useLoaderData() as { post: PostDetailDto };
+  const hasViewedRef = useRef(false);
+
+  useEffect(() => {
+    if (hasViewedRef.current) return;
+    hasViewedRef.current = true;
+    postApi.incrementView(post.id).catch(console.error);
+  }, [post.id]);
 
   return (
     <Card className="max-w-4xl mx-auto overflow-hidden">
@@ -66,13 +75,11 @@ export function PostDetailPage() {
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
-                {/* TODO: 阅读时间根据正文内容计算 */}
-                阅读时间约 5 分钟
+                阅读时间约 {post.readTime} 分钟
               </span>
               <span className="flex items-center gap-1">
                 <Eye className="h-4 w-4" />
-                {/* TODO: 后台实现浏览次数的记录 */}
-                浏览次数
+                {post.views} 次阅读
               </span>
             </div>
           </header>

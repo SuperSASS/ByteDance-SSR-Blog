@@ -115,4 +115,23 @@ export const postApiController = {
     const stats = await postService.getArchiveStatistics();
     ctx.body = stats;
   },
+
+  async incrementView(ctx: Context) {
+    const id = Number(ctx.params.id);
+    if (isNaN(id)) {
+      ctx.status = 400;
+      ctx.body = { error: 'Invalid ID' };
+      return;
+    }
+
+    // 获取 IP（兼容代理）
+    const ip = ctx.ip || ctx.request.ip || 'unknown';
+
+    const increased = await postService.incrementView(id, ip);
+
+    ctx.body = {
+      success: true,
+      increased,
+    };
+  },
 };

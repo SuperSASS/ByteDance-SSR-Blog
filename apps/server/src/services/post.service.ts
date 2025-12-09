@@ -8,7 +8,7 @@ import type {
 } from 'ssr-blog-shared';
 import { estimateReadingTime } from '../utils/estimateReadingTime.js';
 
-// Transform Prisma Post to PostSummaryDto
+// 将 Prisma Post 转换为 PostSummaryDto
 function toPostSummaryDto(post: any): PostSummaryDto {
   return {
     id: post.id,
@@ -37,6 +37,25 @@ function toPostSummaryDto(post: any): PostSummaryDto {
     })),
   };
 }
+
+// 浏览记录缓存：Key = "ip:postId", Value = 时间戳 (毫秒)
+const recentViews = new Map<string, number>();
+
+// 防刷时间窗口 (30秒)
+const RESTRICTION_WINDOW_MS = 30 * 1000;
+
+// 清理间隔 (1小时)，防止内存泄漏
+const CLEANUP_INTERVAL_MS = 60 * 60 * 1000;
+
+// 定期清理过期的浏览记录
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, timestamp] of recentViews.entries()) {
+    if (now - timestamp > RESTRICTION_WINDOW_MS) {
+      recentViews.delete(key);
+    }
+  }
+}, CLEANUP_INTERVAL_MS);
 
 // Transform Prisma Post to PostDetailDto
 function toPostDetailDto(post: any): PostDetailDto {
@@ -308,5 +327,42 @@ export const postService = {
     return Array.from(yearCounts.entries())
       .map(([year, count]) => ({ year, count }))
       .sort((a, b) => b.year - a.year);
+  },
+
+  /**
+   * 增加文章阅读量（带防刷机制）
+   * @param postId - 文章 ID
+   * @param ip - 请求者 IP（用于识别来源）
+   * @returns boolean - 是否增加成功（true=增加，false=被限流）
+   */
+  async incrementView(postId: number, ip: string): Promise<boolean> {
+    const key = `${ip}:${postId}`;
+    const now = Date.now();
+    const lastViewTime = recentViews.get(key);
+
+    // 防刷检查：同一 IP 在时间窗口内访问同一文章
+    if (lastViewTime && now - lastViewTime < RESTRICTION_WINDOW_MS) {
+      return false; // 最近已访问，不计数
+    }
+
+    // 更新时间戳
+    recentViews.set(key, now);
+
+    // 数据库原子增量更新
+    try {
+      await prisma.post.update({
+        where: { id: postId },
+        data: {
+          views: {
+            increment: 1,
+          },
+        },
+      });
+      return true;
+    } catch (error) {
+      console.error(`更新文章 ${postId} 阅读量失败:`, error);
+      // 即使数据库更新失败，也算作“已访问”以触发限流，避免数据库压力
+      return false;
+    }
   },
 };

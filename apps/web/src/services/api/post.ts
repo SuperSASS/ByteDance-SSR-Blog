@@ -26,6 +26,17 @@ export const postApi = {
     return apiFetch<{ year: number; count: number }[]>('/archive/statistics');
   },
 
+  async incrementView(
+    id: number
+  ): Promise<{ success: boolean; increased: boolean }> {
+    return apiFetch<{ success: boolean; increased: boolean }>(
+      `/posts/${id}/view`,
+      {
+        method: 'POST',
+      }
+    );
+  },
+
   // Admin methods
   async getAdminPosts(
     params?: { page?: number; limit?: number },
