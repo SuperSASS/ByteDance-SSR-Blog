@@ -26,7 +26,8 @@ export async function login(ctx: Koa.Context) {
       sameSite: 'lax',
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 天
-      secure: process.env.NODE_ENV === 'production', // 生产环境只使用 HTTPS
+      //secure: process.env.NODE_ENV === 'production', // 生产环境只使用 HTTPS
+      // 注：由于目前生产环境使用 npm start 仍为 HTTP，故这里暂时注释掉
     });
 
     // 返回 user 信息

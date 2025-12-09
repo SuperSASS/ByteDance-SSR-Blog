@@ -11,6 +11,7 @@ import ssrRouter from './routes/ssr.js';
 import apiRouter from './routes/api.js';
 import koaConnect from 'koa-connect';
 import './utils/globalReact.js';
+import { setHeaders } from './utils/getCacheOption.js';
 
 //dotenv.config({ path: "../../.env" }); // 如果用 import 'dotenv/config'，加载的是当前文件（node 运行目录）所在目录的 .env
 
@@ -65,33 +66,18 @@ if (isDev) {
   // --- Production Mode (Static Files) ---
   console.log('🚀 Starting in Production Mode (Static Files)');
 
-  // 1. 托管 web/dist (构建产物)
-  // 包含 assets (带 hash, 强缓存) 和 index.html (无 hash)
+  // 托管 web/dist/client (构建产物)，策略根据文件类型决定
   app.use(
     serve(path.join(__dirname, '../../web/dist/client'), {
       index: false, // 不自动 serve index.html，交给 SSR 处理
-      maxage: 31536000000, // 1年 (ms)
-      immutable: true, // 只有文件名带 hash 的资源才生效（Vite 默认 assets 都在 assets/ 下且带 hash）
-      setHeaders: (res, path) => {
-        // 对非 assets 目录下的文件（如 favicon.ico 在根目录），减少缓存时间
-        if (!path.includes('assets' + '/')) {
-          res.setHeader('Cache-Control', 'public, max-age=864000'); // 10天
-        }
-      },
-    })
-  );
-
-  // 2. 托管 web/public (通常 build 后已在 dist 中，但以防万一)
-  app.use(
-    serve(path.join(__dirname, '../../web/public'), {
-      maxage: 86400000, // 1天
+      setHeaders,
     })
   );
 }
 
 // 4. 上传文件目录 (Dev & Prod)
 const uploadDir = path.join(__dirname, '../uploads'); // 指向 apps/server/uploads
-app.use(mount('/uploads', serve(uploadDir)));
+app.use(mount('/uploads', serve(uploadDir, { setHeaders })));
 
 // 5. API routes (must come before SSR catch-all)
 app.use(apiRouter.routes());
