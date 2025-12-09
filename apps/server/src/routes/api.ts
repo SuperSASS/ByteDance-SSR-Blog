@@ -6,6 +6,8 @@ import { tagApiController } from '../controllers/tag.api.controller.js';
 import { permissionApiController } from '../controllers/permission.api.controller.js';
 import { dashboardController as dashboardApiController } from '../controllers/dashboard.api.controller.js';
 import * as authController from '../controllers/auth.api.controller.js';
+import { uploadController } from '../controllers/upload.controller.js';
+import { upload } from '../middleware/upload.middleware.js';
 import {
   requireAuth,
   requireRole,
@@ -180,6 +182,15 @@ router.get(
   '/dashboard/permissions',
   requireAuth,
   dashboardApiController.getPermissions
+);
+
+// Upload routes (需要 ADMIN 或 EDITOR 权限)
+router.post(
+  '/upload/image',
+  requireAuth,
+  requireRole('ADMIN', 'EDITOR'),
+  upload.single('image'),
+  uploadController.uploadImage
 );
 
 export default router;

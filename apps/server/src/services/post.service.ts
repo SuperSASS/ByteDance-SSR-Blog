@@ -101,6 +101,12 @@ export const postService = {
   },
 
   async updatePost(id: number, data: UpdatePostDto): Promise<PostDetailDto> {
+    // 获取旧文章信息（用于清理旧图片）
+    const oldPost = await prisma.post.findUnique({
+      where: { id },
+      select: { coverImageUrl: true },
+    });
+
     // Handle tag updates if provided
     const updateData: any = {
       ...(data.title && { title: data.title }),
@@ -143,6 +149,20 @@ export const postService = {
         },
       },
     });
+
+    // 如果更新了封面图，删除旧图片
+    if (
+      data.coverImageUrl !== undefined &&
+      oldPost?.coverImageUrl &&
+      data.coverImageUrl !== oldPost.coverImageUrl
+    ) {
+      // 异步删除，不阻塞响应
+      const { deleteUploadedFile } = await import('../utils/deleteFile.js');
+      deleteUploadedFile(oldPost.coverImageUrl).catch((err) =>
+        console.error('Failed to delete old cover image:', err)
+      );
+    }
+
     return toPostDetailDto(post);
   },
 

@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { MarkdownEditor } from '@/components/markdown/MarkdownEditor';
+import { ImageUpload } from '@/components/common/ImageUpload';
 import type { CategoryDto, PostDetailDto, TagDto } from 'ssr-blog-shared';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
@@ -52,6 +53,7 @@ export function AdminPostEditPage() {
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>(
     post?.tags.map((t) => t.id) || []
   );
+  const [coverImageUrl, setCoverImageUrl] = useState(post?.coverImageUrl || '');
 
   useEffect(() => {
     if (actionData) {
@@ -140,13 +142,12 @@ export function AdminPostEditPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="coverImageUrl">封面图 URL</Label>
-            <Input
-              id="coverImageUrl"
-              name="coverImageUrl"
-              defaultValue={post?.coverImageUrl || ''}
-              placeholder="https://..."
+            <ImageUpload
+              value={coverImageUrl}
+              onChange={setCoverImageUrl}
+              label="封面图"
             />
+            <input type="hidden" name="coverImageUrl" value={coverImageUrl} />
           </div>
 
           <div className="space-y-2">
