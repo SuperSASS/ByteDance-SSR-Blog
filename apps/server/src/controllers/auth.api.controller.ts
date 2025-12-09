@@ -1,6 +1,6 @@
 import type Koa from 'koa';
 import * as authService from '../services/auth.service.js';
-import type { LoginDto } from '../../../../packages/shared/src/dto/auth.dto.js';
+import type { LoginDto } from 'ssr-blog-shared';
 
 /**
  * 用户登录

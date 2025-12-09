@@ -12,6 +12,7 @@ function toUserDto(user: User): UserDto {
   return {
     id: user.id,
     username: user.username,
+    email: user.email || '', // Add email
     role: user.role,
     createdAt: user.createdAt.toISOString(),
   };
@@ -23,6 +24,7 @@ export const userService = {
     const user = await prisma.user.create({
       data: {
         username: data.username,
+        email: data.email || `${data.username}@example.com`,
         passwordHash: data.password, // In production, hash this!
         role: data.role || 'USER',
       },

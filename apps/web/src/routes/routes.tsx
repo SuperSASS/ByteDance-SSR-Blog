@@ -1,4 +1,4 @@
-import { redirect, type RouteObject } from 'react-router-dom';
+import type { RouteObject } from 'react-router-dom';
 import { SiteLayout } from '@/layouts/SiteLayout';
 import { AdminLayout } from '@/layouts/AdminLayout';
 import { HomePage } from '@/pages/blog/HomePage';

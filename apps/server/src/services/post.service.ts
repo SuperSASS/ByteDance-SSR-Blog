@@ -82,7 +82,7 @@ export const postService = {
         author: { connect: { id: authorId } },
         category: { connect: { id: data.categoryId } },
         tags: {
-          create: data.tagIds.map((tagId) => ({
+          create: data.tagIds.map((tagId: number) => ({
             tag: { connect: { id: tagId } },
           })),
         },
@@ -124,7 +124,7 @@ export const postService = {
         where: { postId: id },
       });
       updateData.tags = {
-        create: data.tagIds.map((tagId) => ({
+        create: data.tagIds.map((tagId: number) => ({
           tag: { connect: { id: tagId } },
         })),
       };

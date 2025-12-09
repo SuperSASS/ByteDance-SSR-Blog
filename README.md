@@ -1,7 +1,5 @@
 # ✍️ SSR Blog
 
-[English Documentation](./README.md)
-
 一个使用 React 19、React Router 7、Koa 3 和 TypeScript 构建的现代化全栈 SSR 博客平台。本项目采用 Monorepo 架构，旨在作为掌握现代前端架构、服务端渲染（SSR）及全栈开发实践的学习平台。
 
 > **SSR Blog** - 探索 React Router v7 开发范式与 SSR 最佳实践的技术博客系统

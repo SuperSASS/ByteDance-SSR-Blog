@@ -1,10 +1,7 @@
 import { prisma } from '../db/prisma.js';
 import { verifyPassword } from '../utils/hash.js';
 import { signToken } from '../utils/jwt.js';
-import type {
-  AuthResponseDto,
-  LoginDto,
-} from '../../../../packages/shared/src/dto/auth.dto.js';
+import type { AuthResponseDto, LoginDto } from 'ssr-blog-shared';
 
 /**
  * 用户登录
