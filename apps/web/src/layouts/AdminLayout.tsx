@@ -74,12 +74,14 @@ export function AdminLayout() {
   );
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       <Toaster position="top-center" richColors />
       {/* 左侧导航栏 */}
-      <aside className="w-64 bg-white shadow-md flex flex-col">
+      <aside className="w-64 bg-white dark:bg-gray-800 shadow-md flex flex-col">
         <div className="p-6">
-          <h1 className="text-2xl font-bold text-gray-800">博客后台</h1>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+            博客后台
+          </h1>
         </div>
         <nav className="mt-6 flex-1">
           {filteredMenuItems.map((item) => {
@@ -88,7 +90,7 @@ export function AdminLayout() {
               <Link
                 key={item.path}
                 to={item.path}
-                className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                className="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
               >
                 <Icon className="w-5 h-5 mr-3" />
                 <span
@@ -106,16 +108,16 @@ export function AdminLayout() {
         </nav>
 
         {/* User Info & Logout */}
-        <div className="p-6 border-t bg-gray-50">
+        <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
           <div className="flex items-center mb-4">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold mr-3">
               {user.username.charAt(0).toUpperCase()}
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-medium text-gray-900 truncate">
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                 {user.username}
               </p>
-              <p className="text-xs text-gray-500 truncate">
+              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                 {convertRoleToString(user.role)}
               </p>
             </div>
