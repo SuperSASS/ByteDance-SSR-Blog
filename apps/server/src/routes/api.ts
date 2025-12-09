@@ -4,6 +4,7 @@ import { userApiController } from '../controllers/user.api.controller.js';
 import { categoryApiController } from '../controllers/category.api.controller.js';
 import { tagApiController } from '../controllers/tag.api.controller.js';
 import { permissionApiController } from '../controllers/permission.api.controller.js';
+import { dashboardController as dashboardApiController } from '../controllers/dashboard.api.controller.js';
 import * as authController from '../controllers/auth.api.controller.js';
 import {
   requireAuth,
@@ -39,24 +40,30 @@ router.get('/categories/:id', categoryApiController.getCategory);
 router.get('/tags', tagApiController.getTags);
 router.get('/tags/:id', tagApiController.getTag);
 
-// ==================== 后台管理 API(需要认证和权限) ====================
+// 后台管理 API(需要认证和权限)
 // 后台文章管理(需要 ADMIN 或 EDITOR 角色)
-router.post(
+router.get(
   '/admin/posts',
+  requireAuth,
+  requireRole('ADMIN', 'EDITOR'),
+  postApiController.getAdminPosts // Assuming this method exists in controller
+);
+router.post(
+  '/posts',
   requireAuth,
   requireRole('ADMIN', 'EDITOR'),
   requireCategoryPermission('body.categoryId'),
   postApiController.createPost
 );
 router.put(
-  '/admin/posts/:id',
+  '/posts/:id',
   requireAuth,
   requireRole('ADMIN', 'EDITOR'),
   // TODO: 需要检查文章所属分类的权限
   postApiController.updatePost
 );
 router.delete(
-  '/admin/posts/:id',
+  '/posts/:id',
   requireAuth,
   requireRole('ADMIN', 'EDITOR'),
   // TODO: 需要检查文章所属分类的权限
@@ -65,31 +72,31 @@ router.delete(
 
 // 后台用户管理(仅 ADMIN)
 router.post(
-  '/admin/users',
+  '/users',
   requireAuth,
   requireRole('ADMIN'),
   userApiController.createUser
 );
 router.get(
-  '/admin/users',
+  '/users',
   requireAuth,
   requireRole('ADMIN'),
   userApiController.getUsers
 );
 router.get(
-  '/admin/users/:id',
+  '/users/:id',
   requireAuth,
   requireRole('ADMIN'),
   userApiController.getUser
 );
 router.put(
-  '/admin/users/:id',
+  '/users/:id',
   requireAuth,
   requireRole('ADMIN'),
   userApiController.updateUser
 );
 router.delete(
-  '/admin/users/:id',
+  '/users/:id',
   requireAuth,
   requireRole('ADMIN'),
   userApiController.deleteUser
@@ -97,19 +104,19 @@ router.delete(
 
 // 后台分类管理(仅 ADMIN)
 router.post(
-  '/admin/categories',
+  '/categories',
   requireAuth,
   requireRole('ADMIN'),
   categoryApiController.createCategory
 );
 router.put(
-  '/admin/categories/:id',
+  '/categories/:id',
   requireAuth,
   requireRole('ADMIN'),
   categoryApiController.updateCategory
 );
 router.delete(
-  '/admin/categories/:id',
+  '/categories/:id',
   requireAuth,
   requireRole('ADMIN'),
   categoryApiController.deleteCategory
@@ -117,19 +124,19 @@ router.delete(
 
 // 后台标签管理(仅 ADMIN)
 router.post(
-  '/admin/tags',
+  '/tags',
   requireAuth,
   requireRole('ADMIN'),
   tagApiController.createTag
 );
 router.put(
-  '/admin/tags/:id',
+  '/tags/:id',
   requireAuth,
   requireRole('ADMIN'),
   tagApiController.updateTag
 );
 router.delete(
-  '/admin/tags/:id',
+  '/tags/:id',
   requireAuth,
   requireRole('ADMIN'),
   tagApiController.deleteTag
@@ -137,28 +144,41 @@ router.delete(
 
 // 后台权限管理(仅 ADMIN)
 router.post(
-  '/admin/permissions',
+  '/permissions',
   requireAuth,
   requireRole('ADMIN'),
   permissionApiController.grantPermission
 );
 router.delete(
-  '/admin/permissions/:userId/:categoryId',
+  '/permissions/:userId/:categoryId',
   requireAuth,
   requireRole('ADMIN'),
   permissionApiController.revokePermission
 );
 router.get(
-  '/admin/permissions/user/:userId',
+  '/permissions/user/:userId',
   requireAuth,
   requireRole('ADMIN'),
   permissionApiController.getUserPermissions
 );
 router.get(
-  '/admin/permissions/category/:categoryId',
+  '/permissions/category/:categoryId',
   requireAuth,
   requireRole('ADMIN'),
   permissionApiController.getCategoryPermissions
+);
+
+// Dashboard routes
+router.get(
+  '/dashboard/stats',
+  requireAuth,
+  requireRole('ADMIN', 'EDITOR'),
+  dashboardApiController.getStats
+);
+router.get(
+  '/dashboard/permissions',
+  requireAuth,
+  dashboardApiController.getPermissions
 );
 
 export default router;

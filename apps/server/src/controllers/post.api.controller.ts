@@ -5,8 +5,14 @@ import type { CreatePostDto, UpdatePostDto } from 'ssr-blog-shared';
 export const postApiController = {
   async createPost(ctx: Context) {
     const body = ctx.request.body as CreatePostDto;
-    // TODO: Get authorId from authenticated user
-    const authorId = 1; // Hardcoded for now
+    // Get authorId from authenticated user
+    const user = ctx.state.user;
+    if (!user || !user.userId) {
+      ctx.status = 401;
+      ctx.body = { message: 'Unauthorized' };
+      return;
+    }
+    const authorId = user.userId;
 
     try {
       const post = await postService.createPost(body, authorId);
@@ -71,6 +77,19 @@ export const postApiController = {
         ? await postService.getPublishedPosts(query)
         : await postService.getPosts(query);
 
+    ctx.body = posts;
+  },
+
+  async getAdminPosts(ctx: Context) {
+    const { page, limit, orderBy, order } = ctx.query;
+    const query = {
+      page: page ? Number(page) : undefined,
+      limit: limit ? Number(limit) : undefined,
+      orderBy: orderBy as string | undefined,
+      order: (order as 'asc' | 'desc') || undefined,
+    };
+    // Admin sees all posts
+    const posts = await postService.getPosts(query);
     ctx.body = posts;
   },
 

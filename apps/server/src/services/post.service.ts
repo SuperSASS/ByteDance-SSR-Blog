@@ -128,6 +128,11 @@ export const postService = {
   },
 
   async deletePost(id: number): Promise<void> {
+    // Delete related tags first (manual cascade)
+    await prisma.postTag.deleteMany({
+      where: { postId: id },
+    });
+
     await prisma.post.delete({
       where: { id },
     });
@@ -149,8 +154,21 @@ export const postService = {
     return post ? toPostDetailDto(post) : null;
   },
 
-  async getPosts(query?: PaginationQuery): Promise<PostSummaryDto[]> {
+  async getPosts(
+    query?: PaginationQuery,
+    filter?: { categoryIds?: number[]; authorId?: number }
+  ): Promise<PostSummaryDto[]> {
+    const where: any = {};
+
+    if (filter?.categoryIds) {
+      where.categoryId = { in: filter.categoryIds };
+    }
+    if (filter?.authorId) {
+      where.authorId = filter.authorId;
+    }
+
     const posts = await prisma.post.findMany({
+      where,
       skip:
         query?.page && query?.limit
           ? (query.page - 1) * query.limit

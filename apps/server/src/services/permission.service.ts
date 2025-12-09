@@ -6,19 +6,6 @@ function toPermissionDto(permission: any): PermissionDto {
   return {
     userId: permission.userId,
     categoryId: permission.categoryId,
-    user: permission.user
-      ? {
-          id: permission.user.id,
-          username: permission.user.username,
-        }
-      : undefined,
-    category: permission.category
-      ? {
-          id: permission.category.id,
-          name: permission.category.name,
-          slug: permission.category.slug,
-        }
-      : undefined,
   };
 }
 
@@ -28,10 +15,6 @@ export const permissionService = {
       data: {
         userId: data.userId,
         categoryId: data.categoryId,
-      },
-      include: {
-        user: true,
-        category: true,
       },
     });
     return toPermissionDto(permission);
@@ -51,10 +34,6 @@ export const permissionService = {
   async getUserPermissions(userId: number): Promise<PermissionDto[]> {
     const permissions = await prisma.userCategoryPermission.findMany({
       where: { userId },
-      include: {
-        user: true,
-        category: true,
-      },
     });
     return permissions.map(toPermissionDto);
   },
@@ -62,10 +41,6 @@ export const permissionService = {
   async getCategoryPermissions(categoryId: number): Promise<PermissionDto[]> {
     const permissions = await prisma.userCategoryPermission.findMany({
       where: { categoryId },
-      include: {
-        user: true,
-        category: true,
-      },
     });
     return permissions.map(toPermissionDto);
   },
