@@ -7,6 +7,8 @@ export interface PostSummaryDto {
   summary: string | null;
   coverImageUrl: string | null;
   publishedAt: string | null;
+  readTime: number;
+  views: number;
   createdAt: string;
   updatedAt: string;
   author: {

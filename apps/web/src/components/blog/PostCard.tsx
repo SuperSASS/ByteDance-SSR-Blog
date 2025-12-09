@@ -6,11 +6,9 @@ import type { PostSummaryDto } from 'ssr-blog-shared';
 
 interface PostCardProps {
   post: PostSummaryDto;
-  costTime?: string;
-  viewCount?: number;
 }
 
-export function PostCard({ post, costTime, viewCount }: PostCardProps) {
+export function PostCard({ post }: PostCardProps) {
   return (
     <Link to={`/posts/${post.id}`} className="block group h-full">
       <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 h-full flex flex-col bg-card/50 backdrop-blur-sm border-muted/40">
@@ -65,18 +63,14 @@ export function PostCard({ post, costTime, viewCount }: PostCardProps) {
                 ? new Date(post.publishedAt).toLocaleDateString('zh-CN')
                 : '未发布'}
             </span>
-            {costTime && (
-              <span className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                {costTime}
-              </span>
-            )}
-            {viewCount && (
-              <span className="flex items-center gap-1">
-                <Eye className="h-3 w-3" />
-                {viewCount}
-              </span>
-            )}
+            <span className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {post.readTime}
+            </span>
+            <span className="flex items-center gap-1">
+              <Eye className="h-3 w-3" />
+              {post.views}
+            </span>
           </div>
         </CardContent>
       </Card>

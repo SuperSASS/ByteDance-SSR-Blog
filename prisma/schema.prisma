@@ -15,6 +15,7 @@ model User {
   id           Int      @id @default(autoincrement())
   username     String   @unique
   passwordHash String
+  email        String
   role         Role     @default(USER)
   createdAt    DateTime @default(now())
 
@@ -53,6 +54,8 @@ model Post {
   summary       String?
   coverImageUrl String?
   publishedAt   DateTime?
+  readTime      Int
+  views         Int       @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

@@ -9,6 +9,6 @@ export default defineConfig({
   // 这里配置 datasource 的 url（原来在 schema 里的那行）
   datasource: {
     // 习惯上还是用 env，比写死路径灵活
-    url: process.env.DATABASE_URL ?? 'file:./dev.db',
+    url: 'file:dev.db',
   },
 });

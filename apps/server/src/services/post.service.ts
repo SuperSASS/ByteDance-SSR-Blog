@@ -6,6 +6,7 @@ import type {
   PostDetailDto,
   PaginationQuery,
 } from 'ssr-blog-shared';
+import { estimateReadingTime } from '../utils/estimateReadingTime.js';
 
 // Transform Prisma Post to PostSummaryDto
 function toPostSummaryDto(post: any): PostSummaryDto {
@@ -15,6 +16,8 @@ function toPostSummaryDto(post: any): PostSummaryDto {
     slug: post.slug,
     summary: post.summary,
     coverImageUrl: post.coverImageUrl,
+    readTime: post.readTime,
+    views: post.views,
     publishedAt: post.publishedAt?.toISOString() || null,
     createdAt: post.createdAt.toISOString(),
     updatedAt: post.updatedAt.toISOString(),
@@ -56,6 +59,7 @@ export const postService = {
         summary: data.summary,
         coverImageUrl: data.coverImageUrl,
         publishedAt: data.publishedAt ? new Date(data.publishedAt) : null,
+        readTime: estimateReadingTime(data.content),
         author: { connect: { id: authorId } },
         category: { connect: { id: data.categoryId } },
         tags: {

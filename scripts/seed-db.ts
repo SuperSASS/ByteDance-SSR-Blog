@@ -1,6 +1,6 @@
 // apps/server/src/scripts/seed-db.ts
-import { prisma } from '../src/db/prisma.js';
-import { hashPassword } from '../src/utils/hash.js';
+import { prisma } from '../apps/server/src/db/prisma.js';
+import { hashPassword } from '../apps/server/src/utils/hash.js';
 
 async function main() {
   console.log('🌱 Starting database seed...');
@@ -37,6 +37,7 @@ async function main() {
     update: {},
     create: {
       username: 'admin',
+      email: 'admin@ssr-blog.com',
       passwordHash: adminPassword,
       role: 'ADMIN',
     },
@@ -50,6 +51,7 @@ async function main() {
     update: {},
     create: {
       username: 'editor',
+      email: 'editor@ssr-blog.com',
       passwordHash: editorPassword,
       role: 'EDITOR',
     },

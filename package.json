@@ -12,7 +12,11 @@
     "lint": "pnpm -r lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "prepare": "husky install",
-    "kill": "node scripts/kill-port.js 3000"
+    "kill": "node scripts/kill-port.js 3000",
+    "db:migration": "npx prisma migrate dev",
+    "db:client": "npx prisma generate",
+    "db:reset": "tsx scripts/seed-db.ts",
+    "db:studio": "prisma studio --url file:dev.db"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",

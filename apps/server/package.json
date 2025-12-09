@@ -7,9 +7,7 @@
     "dev": "nodemon --watch src --ext ts,tsx,json --exec tsx src/app.ts -r dotenv/config dotenv_config_path=../../.env",
     "build": "tsc",
     "lint": "eslint .",
-    "start": "node dist/app.js",
-    "db:reset": "tsx scripts/seed-db.ts",
-    "db:studio": "prisma studio --url file:../../dev.db"
+    "start": "node dist/app.js"
   },
   "dependencies": {
     "@koa/router": "^14.0.0",
