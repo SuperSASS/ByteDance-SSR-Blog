@@ -1,11 +1,22 @@
+/**
+ * 生成 HTML 模板
+ * @param appHtml - SSR 渲染的应用 HTML
+ * @param styles - CSS 文件路径数组（仅生产模式）
+ * @param scripts - JS 文件路径数组（仅生产模式）
+ */
 export function htmlTemplate(
   appHtml: string,
-  initialData: any,
-  styles: string[] = []
+  styles: string[] = [],
+  scripts: string[] = []
 ) {
-  const initialDataJson = JSON.stringify(initialData).replace(/</g, '\\u003c');
   const styleTags = styles
     .map((style) => `<link rel="stylesheet" href="${style}" />`)
+    .join('\n    ');
+
+  const scriptTags = scripts
+    .map(
+      (script) => `<script type="module" crossorigin src="${script}"></script>`
+    )
     .join('\n    ');
 
   return `<!DOCTYPE html>
@@ -19,8 +30,7 @@ export function htmlTemplate(
   </head>
   <body>
     <div id="root">${appHtml}</div>
-    <script>window.__INITIAL_DATA__ = ${initialDataJson};</script>
-    <script type="module" src="http://localhost:5173/src/entry-client.tsx"></script>
+    ${scriptTags}
   </body>
 </html>`;
 }

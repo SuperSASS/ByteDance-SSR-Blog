@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --watch src --ext ts,tsx,json --exec tsx src/app.ts -r dotenv/config dotenv_config_path=../../.env",
-    "build": "tsc",
+    "build": "tsc -b",
     "lint": "eslint .",
     "start": "node dist/app.js"
   },
@@ -17,6 +17,7 @@
     "jsonwebtoken": "^9.0.2",
     "koa": "^3.1.1",
     "koa-bodyparser": "^4.4.1",
+    "koa-connect": "^2.1.0",
     "koa-jwt": "^4.0.4",
     "koa-logger": "^4.0.0",
     "koa-mount": "^4.2.0",
@@ -33,6 +34,7 @@
     "@types/koa-logger": "^3.1.5",
     "@types/koa-mount": "^4.0.5",
     "@types/koa-static": "^4.0.4",
-    "@types/koa__router": "^12.0.5"
+    "@types/koa__router": "^12.0.5",
+    "vite": "^7.2.6"
   }
 }

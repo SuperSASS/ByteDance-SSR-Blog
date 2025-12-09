@@ -4,49 +4,112 @@ import bodyParser from 'koa-bodyparser';
 import koaLogger from 'koa-logger';
 import logger from './utils/logger.js';
 import serve from 'koa-static';
+import mount from 'koa-mount';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import ssrRouter from './routes/ssr.js';
 import apiRouter from './routes/api.js';
+import koaConnect from 'koa-connect';
 import './utils/globalReact.js';
 
 //dotenv.config({ path: "../../.env" }); // 如果用 import 'dotenv/config'，加载的是当前文件（node 运行目录）所在目录的 .env
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = new Koa();
 const PORT = process.env.PORT || 3000;
+const isDev = process.env.NODE_ENV === 'development';
 
 // 中间件
+// 1. 日志
 app.use(
   koaLogger((str) => {
     logger.info(str.trim());
   })
 );
+
+// 2. bodyParser
 app.use(bodyParser());
 
-// 静态资源中间件 - 提供 web/public 目录下的静态文件
-// 例如：favicon.ico, robots.txt, 图片等
-app.use(
-  serve(
-    path.join(path.dirname(fileURLToPath(import.meta.url)), '../../web/public')
-  )
-);
-app.use(
-  serve(
-    path.join(path.dirname(fileURLToPath(import.meta.url)), '../../web/dist'),
-    { index: false }
-  )
-);
+// 3. 静态资源处理策略
+if (isDev) {
+  // --- Development Mode (Vite Middleware) ---
+  console.log('🚀 Starting in Development Mode (Vite Middleware)');
 
-// API routes (must come before SSR catch-all)
+  // 动态导入 vite，避免生产环境依赖
+  // 注意：apps/server/package.json 需要 devDependencies 安装 vite
+  const vite = await import('vite');
+
+  const viteServer = await vite.createServer({
+    root: path.resolve(__dirname, '../../web'),
+    server: {
+      middlewareMode: true,
+      hmr: {
+        // 让 Vite 的 HMR WebSocket 走 Koa 的 http server
+        // 但 Koa server 是在 app.listen 启动的
+        // 实际上 vite.createServer 在 middlewareMode 下会自动处理部分逻辑
+        // 我们这里不需要显式 bind server，除非有复杂 websocket 需求
+      },
+    },
+    appType: 'custom',
+  });
+
+  // 将 vite 实例挂载到 context，供 SSR 路由使用
+  app.use(async (ctx, next) => {
+    ctx.state.vite = viteServer;
+    await next();
+  });
+
+  // 使用 koa-connect 转换 Vite 中间件
+  app.use(koaConnect(viteServer.middlewares));
+} else {
+  // --- Production Mode (Static Files) ---
+  console.log('🚀 Starting in Production Mode (Static Files)');
+
+  // 1. 托管 web/dist (构建产物)
+  // 包含 assets (带 hash, 强缓存) 和 index.html (无 hash)
+  app.use(
+    serve(path.join(__dirname, '../../web/dist/client'), {
+      index: false, // 不自动 serve index.html，交给 SSR 处理
+      maxage: 31536000000, // 1年 (ms)
+      immutable: true, // 只有文件名带 hash 的资源才生效（Vite 默认 assets 都在 assets/ 下且带 hash）
+      setHeaders: (res, path) => {
+        // 对非 assets 目录下的文件（如 favicon.ico 在根目录），减少缓存时间
+        if (!path.includes('assets' + '/')) {
+          res.setHeader('Cache-Control', 'public, max-age=864000'); // 10天
+        }
+      },
+    })
+  );
+
+  // 2. 托管 web/public (通常 build 后已在 dist 中，但以防万一)
+  app.use(
+    serve(path.join(__dirname, '../../web/public'), {
+      maxage: 86400000, // 1天
+    })
+  );
+}
+
+// 4. 上传文件目录 (Dev & Prod)
+const uploadDir = path.join(__dirname, '../uploads'); // 指向 apps/server/uploads
+app.use(mount('/uploads', serve(uploadDir)));
+
+// 5. API routes (must come before SSR catch-all)
 app.use(apiRouter.routes());
 app.use(apiRouter.allowedMethods());
 
-// SSR routes (catch-all, must be last)
+// 6. SSR routes (catch-all, must be last)
 app.use(ssrRouter.routes());
 app.use(ssrRouter.allowedMethods());
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+// 只有当直接运行 app.ts 时才启动监听 (便于测试或作为模块导出)
+// 注意：pnpm dev 运行的是 tsx src/app.ts，所以会执行到这里
+if (
+  import.meta.url === pathToFileURL(process.argv[1]).href ||
+  process.argv[1].endsWith('app.ts')
+) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+  });
+}
 
 export default app;

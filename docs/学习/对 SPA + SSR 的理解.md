@@ -356,3 +356,5 @@ hydrateRoot(
       `vite.config.ts`中开启`manifest: true`，然后 build 后会生成`manifest.json`，其中包含 tsx 文件转换后的 js 带 hash 文件名，  
       然后在管静态资源的`assest.ts`，解析`manifest.json`，从而动态生成`entry-client.js`的链接。  
       ![解决方法 2](<images/image-对 SPA + SSR 的理解-1.png>)
+
+注：以上内容无效，看最新的[5. 环境区分、缓存](./5.%20环境区分、缓存.md)。

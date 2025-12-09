@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { SiteSidebar } from './SiteSidebar';
+import backgroundImage from '@/assets/background.jpg';
 
 export function SiteLayout() {
   return (
@@ -8,8 +9,7 @@ export function SiteLayout() {
       <div
         className="page-background"
         style={{
-          backgroundImage:
-            'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920)',
+          backgroundImage: `url(${backgroundImage})`,
         }}
       />
 
