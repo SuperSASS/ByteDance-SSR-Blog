@@ -22,6 +22,8 @@ import { tagApi } from '@/services/api/tag';
 import { dashboardApi } from '@/services/api/dashboard';
 import { requireAuth } from '@/services/auth.server';
 import { userApi } from '@/services/api/user';
+import { me } from '@/services/auth.client';
+import { permissionApi } from '@/services/api/permission';
 
 export const routes: RouteObject[] = [
   {
@@ -148,7 +150,23 @@ export const routes: RouteObject[] = [
         path: 'posts',
         loader: async ({ request }) => {
           const cookie = request.headers.get('cookie') || '';
-          return await postApi.getAdminPosts(undefined, { cookie });
+          const posts = await postApi.getAdminPosts(undefined, { cookie });
+          const user = await me();
+          // 管理员直接返回全部
+          if (user.role === 'ADMIN') {
+            return posts;
+          }
+
+          // 普通用户：按权限过滤
+          // TODO: 这里可能实现的比较丑陋，日后改
+          const perm = await permissionApi.getUserPermissions(user.id, {
+            cookie,
+          });
+          const allowedCategoryIds = new Set(perm.map((p) => p.categoryId));
+
+          return posts.filter((post) =>
+            allowedCategoryIds.has(post.category.id)
+          );
         },
         // 删除
         action: async ({ request }) => {
@@ -156,8 +174,12 @@ export const routes: RouteObject[] = [
           const formData = await request.formData();
           const id = formData.get('id');
           if (request.method === 'DELETE' && id) {
-            await postApi.deletePost(Number(id), { cookie });
-            return { success: true };
+            try {
+              await postApi.deletePost(Number(id), { cookie });
+              return { success: true };
+            } catch (error: any) {
+              return { success: false, message: error.message };
+            }
           }
           return null;
         },

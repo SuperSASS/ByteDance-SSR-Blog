@@ -6,6 +6,7 @@ export interface DashboardStats {
   categories: number;
   tags: number;
   users: number;
+  totalViews: number;
 }
 
 export interface PermissionData {

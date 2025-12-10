@@ -6,7 +6,7 @@
 
 import { redirect } from 'react-router-dom';
 import { apiFetch } from './api/client';
-import type { AuthUserDto } from 'ssr-blog-shared';
+import type { AuthResponseDto, AuthUserDto } from 'ssr-blog-shared';
 
 /**
  * 服务器环境中，从 HTTP Request 中获取用户信息
@@ -16,14 +16,15 @@ import type { AuthUserDto } from 'ssr-blog-shared';
  */
 export async function getUserFromRequest(
   request: Request
-): Promise<AuthUserDto | null> {
+): Promise<AuthResponseDto['user'] | null> {
   // 目前是手动加的 cookie
   const cookie = request.headers.get('cookie') ?? '';
 
   try {
-    return await apiFetch<AuthUserDto>('/auth/me', {
+    const result = await apiFetch<AuthResponseDto>('/auth/me', {
       headers: { cookie },
     });
+    return result.user;
   } catch (_) {
     // 未登录
     return null;
@@ -39,7 +40,9 @@ export async function getUserFromRequest(
  * @returns 用户信息
  * @throws 未登录时，重定向到 /admin/login
  */
-export async function requireAuth(request: Request): Promise<AuthUserDto> {
+export async function requireAuth(
+  request: Request
+): Promise<AuthResponseDto['user']> {
   const user = await getUserFromRequest(request);
 
   if (!user) {

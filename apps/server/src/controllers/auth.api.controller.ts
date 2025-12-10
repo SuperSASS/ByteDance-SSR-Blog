@@ -66,10 +66,11 @@ export async function me(ctx: Koa.Context) {
     const user = await authService.getUserById(userId);
 
     ctx.body = {
-      id: user.id,
-      username: user.username,
-      role: user.role,
-      createdAt: user.createdAt.toISOString(),
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
     };
   } catch (error) {
     ctx.status = 404;

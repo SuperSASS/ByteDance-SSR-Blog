@@ -20,3 +20,13 @@ export async function login(data: LoginDto): Promise<AuthResponseDto['user']> {
 export async function logout(): Promise<void> {
   await apiFetch('/auth/logout', { method: 'POST' });
 }
+
+/**
+ * 获取当前用户信息
+ */
+export async function me(): Promise<AuthResponseDto['user']> {
+  const response = await apiFetch<AuthResponseDto>('/auth/me', {
+    method: 'GET',
+  });
+  return response.user;
+}

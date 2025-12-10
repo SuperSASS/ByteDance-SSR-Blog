@@ -62,14 +62,14 @@ router.put(
   '/posts/:id',
   requireAuth,
   requireRole('ADMIN', 'EDITOR'),
-  // TODO: 需要检查文章所属分类的权限
+  requireCategoryPermission('params.id'),
   postApiController.updatePost
 );
 router.delete(
   '/posts/:id',
   requireAuth,
   requireRole('ADMIN', 'EDITOR'),
-  // TODO: 需要检查文章所属分类的权限
+  requireCategoryPermission('params.id'),
   postApiController.deletePost
 );
 
@@ -161,7 +161,7 @@ router.delete(
 router.get(
   '/permissions/user/:userId',
   requireAuth,
-  requireRole('ADMIN'),
+  requireRole('ADMIN', 'EDITOR'),
   permissionApiController.getUserPermissions
 );
 router.get(

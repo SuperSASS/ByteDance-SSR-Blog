@@ -33,12 +33,16 @@ export function AdminPostListPage() {
   const posts = useLoaderData() as PostSummaryDto[];
   const submit = useSubmit();
   const [deleteId, setDeleteId] = useState<number | null>(null);
-  const actionData = useActionData() as { success?: boolean } | undefined;
+  const actionData = useActionData() as
+    | { success?: boolean; message?: string }
+    | undefined;
 
   // Handle action success (delete)
   useEffect(() => {
     if (actionData?.success) {
       toast.success('文章删除成功');
+    } else if (actionData?.message) {
+      toast.error(actionData.message);
     }
   }, [actionData]);
 
