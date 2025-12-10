@@ -61,7 +61,9 @@ export function AdminCategoryListPage() {
   };
 
   const handleDelete = (id: number) => {
-    if (confirm('确认删除该分类吗？此操作不可恢复。')) {
+    if (
+      confirm('确认删除该分类吗？将会删除该分类下所有文章！此操作不可恢复。')
+    ) {
       fetcher.submit(
         { intent: 'delete', id: id.toString() },
         { method: 'post' }

@@ -62,17 +62,17 @@ model Post {
   author   User @relation(fields: [authorId], references: [id])
 
   categoryId Int
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   tags PostTag[]
 }
 
 model PostTag {
   postId Int
-  post   Post @relation(fields: [postId], references: [id])
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   tagId Int
-  tag   Tag @relation(fields: [tagId], references: [id])
+  tag   Tag @relation(fields: [tagId], references: [id]) // 这里是否级联看你业务需求
 
   @@id([postId, tagId])
 }
@@ -82,7 +82,7 @@ model UserCategoryPermission {
   user   User @relation(fields: [userId], references: [id])
 
   categoryId Int
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@id([userId, categoryId])
 }

@@ -1,6 +1,7 @@
 import type Koa from 'koa';
 import koaJwt from 'koa-jwt';
 import { prisma } from '../db/prisma.js';
+import { postService } from '../services/post.service.js';
 
 /**
  * JWT 认证中间件
@@ -71,12 +72,14 @@ export function requireCategoryPermission(categoryIdPath: string) {
       const body = (ctx.request as any).body;
       categoryId = Number(body?.[pathParts[1]]);
     } else if (pathParts[0] === 'params') {
-      categoryId = Number(ctx.params[pathParts[1]]);
+      const postId = Number(ctx.params[pathParts[1]]);
+      const post = await postService.getPostById(postId);
+      categoryId = post?.category.id;
     }
 
     if (!categoryId || isNaN(categoryId)) {
       ctx.status = 400;
-      ctx.body = { message: '缺少分类 ID' };
+      ctx.body = { message: '缺少文章 ID' };
       return;
     }
 

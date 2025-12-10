@@ -6,7 +6,7 @@
 
 import { redirect } from 'react-router-dom';
 import { apiFetch } from './api/client';
-import type { AuthResponseDto, AuthUserDto } from 'ssr-blog-shared';
+import type { AuthResponseDto } from 'ssr-blog-shared';
 
 /**
  * 服务器环境中，从 HTTP Request 中获取用户信息

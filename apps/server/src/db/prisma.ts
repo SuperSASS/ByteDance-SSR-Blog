@@ -3,7 +3,8 @@ import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import { PrismaNodeSQLite } from 'prisma-adapter-node-sqlite';
 
-const url = process.env.DATABASE_URL ?? 'file:../../dev.db';
+const url = process.env.DATABASE_URL ?? 'file:./dev.db';
+console.log(url);
 
 const adapter = new PrismaNodeSQLite({
   url,
